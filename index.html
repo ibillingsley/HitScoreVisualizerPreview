@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Color preview tool for Beat Saber HitScoreVisualizer mod">
+  <title>HSV Color Preview</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      font-family: sans-serif;
+    }
+    #scores {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      flex-grow: 1;
+      justify-content: center;
+      align-items: center;
+      background: black url(glass-desert-env.jpg) center;
+      background-size: cover;
+      color: white;
+      font-weight: bold;
+      font-size: 125%;
+    }
+    #data {
+      display: flex;
+      flex-direction: column;
+      background: black;
+      color: white;
+    }
+    #text {
+      flex-grow: 1;
+      width: 40vw;
+      background: inherit;
+      color: inherit;
+    }
+    #text.error {
+      outline: solid thin red;
+    }
+  </style>
+</head>
+<body>
+  <div id="scores"></div>
+  <div id="data">
+    <input id="file" type="file" accept=".json">
+    <textarea id="text">{
+  "judgments": [
+    {
+      "threshold": 115,
+      "color": [1.0, 1.0, 1.0, 1.0]
+    },
+    {
+      "threshold": 113,
+      "color": [0.6, 0.0, 1.0, 1.0]
+    },
+    {
+      "threshold": 110,
+      "color": [0.0, 1.0, 1.0, 1.0]
+    },
+    {
+      "threshold": 105,
+      "color": [0.0, 1.0, 0.0, 1.0]
+    },
+    {
+      "threshold": 100,
+      "color": [1.0, 1.0, 0.0, 1.0]
+    },
+    {
+      "threshold": 70,
+      "color": [1.0, 0.6, 0.0, 1.0]
+    },
+    {
+      "threshold": 50,
+      "color": [1.0, 0.0, 0.0, 1.0]
+    },
+    {
+      "threshold": 0,
+      "color": [0.3, 0.0, 0.0, 1.0]
+    }
+  ]
+}
+</textarea>
+  </div>
+  <script>
+    const container = document.getElementById('scores');
+    const textInput = document.getElementById('text');
+    const fileInput = document.getElementById('file');
+
+    textInput.oninput = () => {
+      textInput.classList.add('error');
+      const json = JSON.parse(textInput.value);
+      if (json && json.judgments) {
+        container.innerHTML = '';
+        for (const judgment of json.judgments) {
+          const score = document.createElement('p');
+          score.textContent = judgment.threshold;
+          score.style.color = `rgb(${judgment.color.slice(0, 3).map(c => c * 255).join(',')})`;
+          container.appendChild(score);
+        }
+        textInput.classList.remove('error');
+      }
+    }
+    textInput.oninput();
+
+    async function setFile(file) {
+      const text = await file.text();
+      textInput.value = text;
+      textInput.oninput();
+    }
+
+    fileInput.onchange = () => {
+      const file = fileInput.files[0];
+      if (file) setFile(file);
+    };
+
+    container.addEventListener('dragover', (e) => {
+      e.preventDefault();
+    });
+
+    document.body.addEventListener('drop', (e) => {
+      const file = e.dataTransfer.files[0];
+      if (file && file.type === 'application/json' && e.target !== fileInput) {
+        e.preventDefault();
+        setFile(file);
+      }
+    });
+  </script>
+</body>
+</html>
