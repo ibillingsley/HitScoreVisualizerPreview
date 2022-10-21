@@ -274,20 +274,22 @@
           return;
         }
       }
-      colorInput.classList.remove('active');
-      colorInput.oninput = null;
+      hideColorPicker();
     });
 
-    textInput.addEventListener('input', () => {
+    function hideColorPicker() {
       colorInput.classList.remove('active');
       colorInput.oninput = null;
-    });
+    }
+
+    textInput.addEventListener('input', hideColorPicker);
 
     // File input
     async function setFile(file) {
       const text = await file.text();
       textInput.value = text;
       textInput.oninput();
+      hideColorPicker();
     }
 
     fileInput.onchange = () => {
