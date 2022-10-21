@@ -45,6 +45,18 @@
       outline: solid thin red;
     }
 
+    #color {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      background: transparent;
+    }
+
+    #color:not(.active) {
+      display: none;
+    }
+
   </style>
 </head>
 <body>
@@ -160,10 +172,13 @@
     }
 </textarea>
   </div>
+  <input id="color" type="color">
   <script>
     const container = document.getElementById('scores');
     const textInput = document.getElementById('text');
     const fileInput = document.getElementById('file');
+    const colorInput = document.getElementById('color');
+    const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]/g;
 
     function render(json) {
       const displayMode = json.displayMode || 'default';
@@ -228,6 +243,45 @@
       }
     }
     textInput.oninput();
+
+    // Color picker
+    textInput.addEventListener('click', (e) => {
+      const cursor = textInput.selectionDirection === 'forward' ? textInput.selectionEnd : textInput.selectionStart;
+      const matches = textInput.value.matchAll(colorRegex);
+      for (const match of matches) {
+        if (cursor > match.index && cursor < match.index + match[0].length) {
+          // Cursor in color block, show picker
+          colorInput.value = '#' + [match[1], match[2], match[3]].map((value) => {
+            value = Math.round(value * 255).toString(16);
+            return value.length < 2 ? '0' + value : value;
+          }).join('');
+          colorInput.style.left = e.clientX + 50 + 'px';
+          colorInput.style.top = e.clientY - 13 + 'px';
+          colorInput.classList.add('active');
+          colorInput.oninput = () => {
+            // Replace color
+            const hex = parseInt(colorInput.value.substring(1), 16);
+            const r = (((hex >> 16) & 255) / 255).toFixed(3);
+            const g = (((hex >> 8) & 255) / 255).toFixed(3);
+            const b = ((hex & 255) / 255).toFixed(3);
+            const split = match[0].split(',');
+            split[0] = split[0].replace(/[\d.]+/, r);
+            split[1] = split[1].replace(/[\d.]+/, g);
+            split[2] = split[2].replace(/[\d.]+/, b);
+            textInput.value = match.input.substring(0, match.index) + split.join(',') + match.input.substring(match.index + match[0].length);
+            textInput.oninput();
+          };
+          return;
+        }
+      }
+      colorInput.classList.remove('active');
+      colorInput.oninput = null;
+    });
+
+    textInput.addEventListener('input', () => {
+      colorInput.classList.remove('active');
+      colorInput.oninput = null;
+    });
 
     // File input
     async function setFile(file) {
