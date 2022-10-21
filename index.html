@@ -11,6 +11,7 @@
       display: flex;
       font-family: sans-serif;
     }
+
     #scores {
       display: flex;
       flex-direction: column;
@@ -23,22 +24,27 @@
       color: white;
       font-weight: bold;
       font-size: 125%;
+      text-align: center;
     }
+
     #data {
       display: flex;
       flex-direction: column;
       background: black;
       color: white;
     }
+
     #text {
       flex-grow: 1;
       width: 40vw;
       background: inherit;
       color: inherit;
     }
+
     #text.error {
       outline: solid thin red;
     }
+
   </style>
 </head>
 <body>
@@ -46,41 +52,112 @@
   <div id="data">
     <input id="file" type="file" accept=".json">
     <textarea id="text">{
-  "judgments": [
-    {
-      "threshold": 115,
-      "color": [1.0, 1.0, 1.0, 1.0]
-    },
-    {
-      "threshold": 113,
-      "color": [0.6, 0.0, 1.0, 1.0]
-    },
-    {
-      "threshold": 110,
-      "color": [0.0, 1.0, 1.0, 1.0]
-    },
-    {
-      "threshold": 105,
-      "color": [0.0, 1.0, 0.0, 1.0]
-    },
-    {
-      "threshold": 100,
-      "color": [1.0, 1.0, 0.0, 1.0]
-    },
-    {
-      "threshold": 70,
-      "color": [1.0, 0.6, 0.0, 1.0]
-    },
-    {
-      "threshold": 50,
-      "color": [1.0, 0.0, 0.0, 1.0]
-    },
-    {
-      "threshold": 0,
-      "color": [0.3, 0.0, 0.0, 1.0]
+      "majorVersion": 3,
+      "minorVersion": 3,
+      "patchVersion": 3,
+      "displayMode": "format",
+      "doIntermediateUpdates": true,
+      "timeDependencyDecimalPrecision": 1,
+      "timeDependencyDecimalOffset": 2,
+      "judgments": [
+        {
+          "threshold": 115,
+          "text": "%BFantastic%A%n%s",
+          "color": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          "fade": false
+        },
+        {
+          "threshold": 101,
+          "text": "<size=80%>%BExcellent%A</size>%n%s",
+          "color": [
+            0.0,
+            1.0,
+            0.0,
+            1.0
+          ],
+          "fade": false
+        },
+        {
+          "threshold": 90,
+          "text": "<size=80%>%BGreat%A</size>%n%s",
+          "color": [
+            1.0,
+            0.980392158,
+            0.0,
+            1.0
+          ],
+          "fade": false
+        },
+        {
+          "threshold": 80,
+          "text": "<size=80%>%BGood%A</size>%n%s",
+          "color": [
+            1.0,
+            0.6,
+            0.0,
+            1.0
+          ],
+          "fade": true
+        },
+        {
+          "threshold": 60,
+          "text": "<size=80%>%BDecent%A</size>%n%s",
+          "color": [
+            1.0,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "fade": true
+        },
+        {
+          "threshold": 0,
+          "text": "<size=80%>%BWay Off%A</size>%n%s",
+          "color": [
+            0.5,
+            0.0,
+            0.0,
+            1.0
+          ],
+          "fade": true
+        }
+      ],
+      "beforeCutAngleJudgments": [
+        {
+          "threshold": 70,
+          "text": " + "
+        },
+        {
+          "threshold": 0,
+          "text": " "
+        }
+      ],
+      "accuracyJudgments": [
+        {
+          "threshold": 15,
+          "text": " + "
+        },
+        {
+          "threshold": 0,
+          "text": " "
+        }
+      ],
+      "afterCutAngleJudgments": [
+        {
+          "threshold": 30,
+          "text": " + "
+        },
+        {
+          "threshold": 0,
+          "text": " "
+        }
+      ]
     }
-  ]
-}
 </textarea>
   </div>
   <script>
@@ -88,22 +165,71 @@
     const textInput = document.getElementById('text');
     const fileInput = document.getElementById('file');
 
+    function render(json) {
+      const displayMode = json.displayMode || 'default';
+      container.innerHTML = '';
+      for (const judgment of json.judgments) {
+        judgment.threshold = judgment.threshold || 0;
+        judgment.text = judgment.text || '';
+        const score = document.createElement('p');
+        switch (displayMode) {
+          case 'format':
+            score.innerHTML = format(judgment, json);
+            break;
+          case 'numeric':
+            score.textContent = judgment.threshold;
+            break;
+          case 'textOnly':
+            score.textContent = judgment.text;
+            break;
+          case 'scoreOnTop':
+            score.appendChild(document.createElement('span')).textContent = judgment.threshold;
+            score.appendChild(document.createElement('br'));
+            score.appendChild(document.createElement('span')).textContent = judgment.text;
+            break;
+          default:
+            score.appendChild(document.createElement('span')).textContent = judgment.text;
+            score.appendChild(document.createElement('br'));
+            score.appendChild(document.createElement('span')).textContent = judgment.threshold;
+            break;
+        }
+        score.className = 'score';
+        score.style.color = `rgb(${judgment.color.slice(0, 3).map(c => c * 255).join(',')})`;
+        container.appendChild(score);
+      }
+    }
+
+    function format(judgment, json) {
+      let text = judgment.text;
+      text = text.replaceAll(/<size=([^>]+)>/g, '<span style="font-size: $1">');
+      text = text.replaceAll('</size>', '</span>');
+      text = text.replaceAll(/<color=([^>]+)>/g, '<span style="color: $1">');
+      text = text.replaceAll('</color>', '</span>');
+      text = text.replaceAll('%b', 70);
+      text = text.replaceAll('%c', 15);
+      text = text.replaceAll('%a', 30);
+      text = text.replaceAll('%t', (5 / 9 * 10 ** (json.timeDependencyDecimalOffset || 0)).toFixed(json.timeDependencyDecimalPrecision || 0));
+      text = text.replaceAll('%B', json.beforeCutAngleJudgments?.[0]?.text || '');
+      text = text.replaceAll('%C', json.accuracyJudgments?.[0]?.text || '');
+      text = text.replaceAll('%A', json.afterCutAngleJudgments?.[0]?.text || '');
+      text = text.replaceAll('%T', json.timeDependencyJudgments?.[0]?.text || '');
+      text = text.replaceAll('%s', judgment.threshold);
+      text = text.replaceAll('%n', '<br>');
+      text = text.replaceAll('%%', '%');
+      return text;
+    }
+
     textInput.oninput = () => {
       textInput.classList.add('error');
       const json = JSON.parse(textInput.value);
       if (json && json.judgments) {
-        container.innerHTML = '';
-        for (const judgment of json.judgments) {
-          const score = document.createElement('p');
-          score.textContent = judgment.threshold;
-          score.style.color = `rgb(${judgment.color.slice(0, 3).map(c => c * 255).join(',')})`;
-          container.appendChild(score);
-        }
+        render(json);
         textInput.classList.remove('error');
       }
     }
     textInput.oninput();
 
+    // File input
     async function setFile(file) {
       const text = await file.text();
       textInput.value = text;
@@ -115,6 +241,7 @@
       if (file) setFile(file);
     };
 
+    // Drag and drop
     container.addEventListener('dragover', (e) => {
       e.preventDefault();
     });
