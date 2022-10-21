@@ -92,7 +92,7 @@
       <input id="filename" type="text" value="default.json">
       <button id="download">Download</button>
     </div>
-    <textarea id="text">{
+    <textarea id="text" spellcheck="false">{
   "majorVersion": 3,
   "minorVersion": 3,
   "patchVersion": 3,
@@ -212,13 +212,12 @@
     const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]/g;
 
     function render(json) {
-      const displayMode = json.displayMode || 'default';
       container.innerHTML = '';
       for (const judgment of json.judgments) {
         judgment.threshold = judgment.threshold || 0;
         judgment.text = judgment.text || '';
         const score = document.createElement('p');
-        switch (displayMode) {
+        switch (json.displayMode) {
           case 'format':
             score.innerHTML = format(judgment, json);
             break;
