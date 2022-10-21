@@ -27,18 +27,42 @@
       text-align: center;
     }
 
-    #data {
+    .sidebar {
       display: flex;
       flex-direction: column;
       background: black;
       color: white;
     }
 
+    .toolbar {
+      display: flex;
+    }
+
+    #file {
+      width: 7em;
+    }
+
+    #file::file-selector-button {
+      width: 100%;
+    }
+
+    #filename {
+      flex-grow: 1;
+      width: 5em;
+      padding: 0 0.5em;
+      background: black;
+      color: white;
+      font-family: monospace;
+      border: none;
+    }
+
     #text {
       flex-grow: 1;
       width: 40vw;
+      min-width: 20em;
       background: inherit;
       color: inherit;
+      font-family: monospace;
     }
 
     #text.error {
@@ -51,6 +75,7 @@
       height: 30px;
       padding: 0;
       background: transparent;
+      border-width: 1px;
     }
 
     #color:not(.active) {
@@ -61,8 +86,12 @@
 </head>
 <body>
   <div id="scores"></div>
-  <div id="data">
-    <input id="file" type="file" accept=".json">
+  <div class="sidebar">
+    <div class="toolbar">
+      <input id="file" type="file" accept=".json">
+      <input id="filename" type="text" value="default.json">
+      <button id="download">Download</button>
+    </div>
     <textarea id="text">{
   "majorVersion": 3,
   "minorVersion": 3,
@@ -177,6 +206,8 @@
     const container = document.getElementById('scores');
     const textInput = document.getElementById('text');
     const fileInput = document.getElementById('file');
+    const fileName = document.getElementById('filename');
+    const download = document.getElementById('download');
     const colorInput = document.getElementById('color');
     const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]/g;
 
@@ -244,6 +275,52 @@
     }
     textInput.oninput();
 
+    // File input
+    async function setFile(file) {
+      const text = await file.text();
+      textInput.value = text;
+      textInput.oninput();
+      fileName.value = file.name;
+      hideColorPicker();
+    }
+
+    fileInput.onchange = () => {
+      const file = fileInput.files[0];
+      if (file) setFile(file);
+    };
+
+    // Drag and drop
+    for (const element of [container, fileName, download]) {
+      element.addEventListener('dragstart', (e) => {
+        e.preventDefault();
+      });
+      element.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+    }
+
+    document.body.addEventListener('drop', (e) => {
+      const file = e.dataTransfer.files[0];
+      if (file && file.type === 'application/json' && e.target !== fileInput) {
+        e.preventDefault();
+        setFile(file);
+      }
+    });
+
+    // Download
+    download.onclick = function () {
+      const a = document.createElement("a");
+      const blob = new Blob([textInput.value], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      a.href = url;
+      a.download = fileName.value;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+
     // Color picker
     textInput.addEventListener('click', (e) => {
       const cursor = textInput.selectionDirection === 'forward' ? textInput.selectionEnd : textInput.selectionStart;
@@ -284,31 +361,6 @@
 
     textInput.addEventListener('input', hideColorPicker);
 
-    // File input
-    async function setFile(file) {
-      const text = await file.text();
-      textInput.value = text;
-      textInput.oninput();
-      hideColorPicker();
-    }
-
-    fileInput.onchange = () => {
-      const file = fileInput.files[0];
-      if (file) setFile(file);
-    };
-
-    // Drag and drop
-    container.addEventListener('dragover', (e) => {
-      e.preventDefault();
-    });
-
-    document.body.addEventListener('drop', (e) => {
-      const file = e.dataTransfer.files[0];
-      if (file && file.type === 'application/json' && e.target !== fileInput) {
-        e.preventDefault();
-        setFile(file);
-      }
-    });
   </script>
 </body>
 </html>
