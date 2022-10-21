@@ -1,4 +1,4 @@
-# HSV Color Preview
+# HitScoreVisualizer Preview
 
 Color preview tool for Beat Saber [HitScoreVisualizer](https://github.com/ErisApps/HitScoreVisualizer) mod.
 
