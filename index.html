@@ -289,14 +289,11 @@
     };
 
     // Drag and drop
-    for (const element of [container, fileName, download]) {
-      element.addEventListener('dragstart', (e) => {
+    document.body.addEventListener('dragover', (e) => {
+      if (e.target !== fileInput && e.target !== text) {
         e.preventDefault();
-      });
-      element.addEventListener('dragover', (e) => {
-        e.preventDefault();
-      });
-    }
+      }
+    });
 
     document.body.addEventListener('drop', (e) => {
       const file = e.dataTransfer.files[0];
@@ -359,6 +356,11 @@
     }
 
     textInput.addEventListener('input', hideColorPicker);
+    document.body.addEventListener('click', (e) => {
+      if (e.target !== textInput && e.target !== colorInput) {
+        hideColorPicker();
+      }
+    });
 
   </script>
 </body>
