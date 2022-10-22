@@ -229,12 +229,13 @@
     const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]/g;
 
     function render(json) {
+      const displayMode = json.displayMode || (json.majorVersion ? 'default' : 'format');
       container.innerHTML = '';
       for (const judgment of json.judgments) {
         judgment.threshold = judgment.threshold || 0;
         judgment.text = judgment.text || '';
         const score = document.createElement('p');
-        switch (json.displayMode) {
+        switch (displayMode) {
           case 'format':
             score.innerHTML = format(judgment, json);
             break;
