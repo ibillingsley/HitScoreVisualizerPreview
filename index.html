@@ -82,11 +82,15 @@
       display: none;
     }
 
-    .source {
+    .footer {
       position: absolute;
       bottom: 0.5em;
       left: 0.5em;
       font-size: 75%;
+      color: #777;
+    }
+
+    .footer a {
       color: #ccc;
       text-decoration: none;
     }
@@ -210,7 +214,10 @@
 }
 </textarea>
   </div>
-  <a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank" class="source">source code</a>
+  <div class="footer">
+    <a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank">source</a> |
+    <a href="https://github.com/ErisApps/HitScoreVisualizer#how-to-config-aka-config-explained" target="_blank">docs</a>
+  </div>
   <input id="color" type="color">
   <script>
     const container = document.getElementById('scores');
