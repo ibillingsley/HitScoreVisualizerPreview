@@ -5,6 +5,13 @@
   <meta name="description" content="Color preview tool for Beat Saber HitScoreVisualizer mod">
   <title>HitScoreVisualizer Preview</title>
   <style>
+    @font-face {
+      font-family: 'Teko';
+      font-style: normal;
+      font-weight: 600;
+      src: url('fonts/teko-600.woff2') format('woff2');
+    }
+
     body {
       margin: 0;
       height: 100vh;
@@ -22,12 +29,17 @@
       flex-grow: 1;
       justify-content: center;
       align-items: center;
-      background: black url(glass-desert-env.jpg) center;
+      background: black url(images/glass-desert-env.jpg) center;
       background-size: cover;
       color: white;
-      font-weight: bold;
-      font-size: 125%;
+      font-family: 'Teko', sans-serif;
+      font-weight: 600;
+      font-size: 150%;
       text-align: center;
+    }
+
+    .score {
+      margin: 0.75em 0;
     }
 
     .sidebar {
