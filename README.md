@@ -2,7 +2,7 @@
 
 Preview tool for Beat Saber [HitScoreVisualizer](https://github.com/ErisApps/HitScoreVisualizer) mod.
 
-## [hsv-color-preview.netlify.app](https://hsv-color-preview.netlify.app/)
+## [hsv-preview.netlify.app](https://hsv-preview.netlify.app/)
 
 - Trailing commas in the JSON are not supported. If your config doesn't work, remove any extra commas.
 - Drag and drop a .json file anywhere on page to load.
