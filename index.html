@@ -257,15 +257,15 @@
             score.textContent = judgment.threshold;
             break;
           case 'textOnly':
-            score.textContent = judgment.text;
+            score.innerHTML = rich(judgment.text);
             break;
           case 'scoreOnTop':
             score.appendChild(document.createElement('span')).textContent = judgment.threshold;
             score.appendChild(document.createElement('br'));
-            score.appendChild(document.createElement('span')).textContent = judgment.text;
+            score.appendChild(document.createElement('span')).innerHTML = rich(judgment.text);
             break;
           default:
-            score.appendChild(document.createElement('span')).textContent = judgment.text;
+            score.appendChild(document.createElement('span')).innerHTML = rich(judgment.text);
             score.appendChild(document.createElement('br'));
             score.appendChild(document.createElement('span')).textContent = judgment.threshold;
             break;
@@ -276,12 +276,16 @@
       }
     }
 
-    function format(judgment, json) {
-      let text = judgment.text;
+    function rich(text) {
       text = text.replaceAll(/<size=([^>]+)>/g, '<span style="font-size: $1">');
       text = text.replaceAll('</size>', '</span>');
       text = text.replaceAll(/<color=([^>]+)>/g, '<span style="color: $1">');
       text = text.replaceAll('</color>', '</span>');
+      return text;
+    }
+
+    function format(judgment, json) {
+      let text = rich(judgment.text);
       text = text.replaceAll('%b', 70);
       text = text.replaceAll('%c', 15);
       text = text.replaceAll('%a', 30);
@@ -298,7 +302,14 @@
 
     textInput.oninput = () => {
       textInput.classList.add('error');
-      const json = JSON.parse(textInput.value);
+      let json = null;
+      try {
+        json = JSON.parse(textInput.value);
+      } catch (e) {
+        console.warn(e);
+        // Remove trailing commas
+        json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, '$1'));
+      }
       if (json && json.judgments) {
         render(json);
         textInput.classList.remove('error');
