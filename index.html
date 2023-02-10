@@ -116,7 +116,7 @@
     }
 
     #help td:first-child {
-      padding: 0 0.5em;
+      padding: 0 1em;
       font-family: monospace;
       font-size: 125%;
       white-space: nowrap;
@@ -283,37 +283,47 @@
       </tr>
       <tr>
         <td>%s</td>
-        <td>The total score of the cut.</td>
-      </tr>
-      <tr>
-        <td>%n</td>
-        <td>A newline.</td>
+        <td>Total cut score (0-115)</td>
       </tr>
       <tr>
         <td>%b</td>
-        <td>The score contributed by the swing before cutting the block.</td>
+        <td>Before cut score (0-70)</td>
       </tr>
       <tr>
         <td>%c</td>
-        <td>The score contributed by the accuracy of the cut.</td>
+        <td>Accuracy score (0-15)</td>
       </tr>
       <tr>
         <td>%a</td>
-        <td>The score contributed by the part of the swing after cutting the block.</td>
+        <td>After cut score (0-30)</td>
       </tr>
       <tr>
         <td>%t</td>
-        <td>The time dependence of the swing, measured from 0 - 1.</td>
+        <td>Time dependence (0-1)</td>
       </tr>
       <tr>
-        <td>%B, %C, <br>%A, %T</td>
-        <td>The judgment text matching the threshold specified in <code>beforeCutAngleJudgments</code>,
-          <code>accuracyJudgments</code>, <code>afterCutAngleJudgments</code>, or <code>timeDependencyJudgments</code>.
-        </td>
+        <td>%B</td>
+        <td>Text matching threshold in <code>beforeCutAngleJudgments</code></td>
+      </tr>
+      <tr>
+        <td>%C</td>
+        <td>Text matching threshold in <code>accuracyJudgments</code></td>
+      </tr>
+      <tr>
+        <td>%A</td>
+        <td>Text matching threshold in <code>afterCutAngleJudgments</code></td>
+      </tr>
+      <tr>
+        <td>%T</td>
+        <td>Text matching threshold in <code>timeDependencyJudgments</code></td>
+      </tr>
+      <tr>
+        <td>%n</td>
+        <td>Newline</td>
       </tr>
       <tr>
         <td>%%</td>
-        <td>A literal percent symbol.</td>
+        <td>Percent symbol</td>
       </tr>
       <tr>
         <th colspan="2">Text Formatting</th>
