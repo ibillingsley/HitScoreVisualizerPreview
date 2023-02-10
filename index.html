@@ -13,6 +13,10 @@
       src: url('fonts/teko-600.woff2') format('woff2');
     }
 
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       height: 100vh;
@@ -24,10 +28,11 @@
     }
 
     #scores {
+      width: 60vw;
+      min-width: 100px;
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
-      flex-grow: 1;
       justify-content: center;
       align-content: center;
       align-items: center;
@@ -38,13 +43,25 @@
       font-weight: 600;
       font-size: 150%;
       text-align: center;
+      overflow: auto;
+      resize: horizontal;
     }
 
     .score {
+      position: relative;
       margin: 0.75em;
     }
 
+    .bloom {
+      position: absolute;
+      top: 0;
+      left: 0;
+      margin: 0;
+      mix-blend-mode: screen;
+    }
+
     .sidebar {
+      flex: 1 1 100px;
       display: flex;
       flex-direction: column;
       background: var(--bg-color);
@@ -53,6 +70,7 @@
 
     .toolbar {
       display: flex;
+      justify-content: flex-end;
     }
 
     #file {
@@ -75,15 +93,46 @@
 
     #text {
       flex-grow: 1;
-      width: 40vw;
+      width: 100%;
       min-width: 20em;
       background: inherit;
       color: inherit;
       font-family: monospace;
+      resize: none;
     }
 
     #text.error {
       outline: solid thin red;
+    }
+
+    label {
+      margin-left: 1em;
+      font-size: 80%;
+    }
+
+    #help {
+      width: 100%;
+      font-size: 80%;
+    }
+
+    #help td:first-child {
+      padding: 0 0.5em;
+      font-family: monospace;
+      font-size: 125%;
+      white-space: nowrap;
+    }
+
+    textarea,
+    table,
+    td,
+    th {
+      border: solid 1px #666;
+      border-spacing: 0;
+      border-collapse: collapse;
+    }
+
+    code {
+      font-size: 125%;
     }
 
     #color {
@@ -228,6 +277,58 @@
   ]
 }
 </textarea>
+    <table id="help">
+      <tr>
+        <th colspan="2">Format Tokens</th>
+      </tr>
+      <tr>
+        <td>%s</td>
+        <td>The total score of the cut.</td>
+      </tr>
+      <tr>
+        <td>%n</td>
+        <td>A newline.</td>
+      </tr>
+      <tr>
+        <td>%b</td>
+        <td>The score contributed by the swing before cutting the block.</td>
+      </tr>
+      <tr>
+        <td>%c</td>
+        <td>The score contributed by the accuracy of the cut.</td>
+      </tr>
+      <tr>
+        <td>%a</td>
+        <td>The score contributed by the part of the swing after cutting the block.</td>
+      </tr>
+      <tr>
+        <td>%t</td>
+        <td>The time dependence of the swing, measured from 0 - 1.</td>
+      </tr>
+      <tr>
+        <td>%B, %C, <br>%A, %T</td>
+        <td>The judgment text matching the threshold specified in <code>beforeCutAngleJudgments</code>,
+          <code>accuracyJudgments</code>, <code>afterCutAngleJudgments</code>, or <code>timeDependencyJudgments</code>.
+        </td>
+      </tr>
+      <tr>
+        <td>%%</td>
+        <td>A literal percent symbol.</td>
+      </tr>
+      <tr>
+        <th colspan="2">Text Formatting</th>
+      </tr>
+      <tr>
+        <td colspan="2">&lt;size=150%&gt;&hellip;&lt;/size&gt;</td>
+      </tr>
+      <tr>
+        <td colspan="2">&lt;color=#FFFFFF&gt;&hellip;&lt;/color&gt;</td>
+      </tr>
+    </table>
+    <div class="toolbar">
+      <label><input id="bloomInput" type="checkbox"> Bloom</label>
+      <label><input id="helpInput" type="checkbox" checked> Help</label>
+    </div>
   </div>
   <div class="footer">
     <a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank">source</a> |
@@ -240,6 +341,9 @@
     const fileInput = document.getElementById('file');
     const fileName = document.getElementById('filename');
     const download = document.getElementById('download');
+    const bloomInput = document.getElementById('bloomInput');
+    const help = document.getElementById('help');
+    const helpInput = document.getElementById('helpInput');
     const colorInput = document.getElementById('color');
     const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]/g;
 
@@ -273,6 +377,12 @@
         }
         score.className = 'score';
         score.style.color = `rgb(${judgment.color.slice(0, 3).map(c => c * 255).join(',')})`;
+        if (bloomInput.checked) {
+          const bloom = score.cloneNode(true);
+          bloom.className = 'bloom';
+          bloom.style.filter = `blur(8px) opacity(${judgment.color[3]})`;
+          score.appendChild(bloom);
+        }
         container.appendChild(score);
       }
     }
@@ -317,6 +427,12 @@
       }
     }
     textInput.oninput();
+
+    bloomInput.oninput = textInput.oninput;
+
+    helpInput.oninput = () => {
+      help.style.display = helpInput.checked ? 'table' : 'none';
+    };
 
     // File input
     async function setFile(file) {
