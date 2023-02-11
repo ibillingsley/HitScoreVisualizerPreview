@@ -355,7 +355,7 @@
     const help = document.getElementById('help');
     const helpInput = document.getElementById('helpInput');
     const colorInput = document.getElementById('color');
-    const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]/g;
+    const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|color=(#[\dA-F]{6})/gi;
 
     function render(json) {
       const displayMode = json.displayMode || (json.majorVersion ? 'default' : 'format');
@@ -494,24 +494,34 @@
       for (const match of matches) {
         if (cursor > match.index && cursor < match.index + match[0].length) {
           // Cursor in color block, show picker
-          colorInput.value = '#' + [match[1], match[2], match[3]].map((value) => {
-            value = Math.round(value * 255).toString(16);
-            return value.length < 2 ? '0' + value : value;
-          }).join('');
+          if (match[4]) {
+            colorInput.value = match[4];
+          } else {
+            colorInput.value = '#' + [match[1], match[2], match[3]].map((value) => {
+              value = Math.round(value * 255).toString(16);
+              return value.length < 2 ? '0' + value : value;
+            }).join('');
+          }
           colorInput.style.left = e.clientX + 50 + 'px';
           colorInput.style.top = e.clientY - 10 + 'px';
           colorInput.classList.add('active');
           colorInput.oninput = () => {
             // Replace color
-            const hex = parseInt(colorInput.value.substring(1), 16);
-            const r = (((hex >> 16) & 255) / 255).toFixed(3);
-            const g = (((hex >> 8) & 255) / 255).toFixed(3);
-            const b = ((hex & 255) / 255).toFixed(3);
-            const split = match[0].split(',');
-            split[0] = split[0].replace(/[\d.]+/, r);
-            split[1] = split[1].replace(/[\d.]+/, g);
-            split[2] = split[2].replace(/[\d.]+/, b);
-            textInput.value = match.input.substring(0, match.index) + split.join(',') + match.input.substring(match.index + match[0].length);
+            let value = match[0];
+            if (match[4]) {
+              value = 'color=' + colorInput.value.toUpperCase();
+            } else {
+              const hex = parseInt(colorInput.value.substring(1), 16);
+              const r = (((hex >> 16) & 255) / 255).toFixed(3);
+              const g = (((hex >> 8) & 255) / 255).toFixed(3);
+              const b = ((hex & 255) / 255).toFixed(3);
+              const split = match[0].split(',');
+              split[0] = split[0].replace(/[\d.]+/, r);
+              split[1] = split[1].replace(/[\d.]+/, g);
+              split[2] = split[2].replace(/[\d.]+/, b);
+              value = split.join(',');
+            }
+            textInput.value = match.input.substring(0, match.index) + value + match.input.substring(match.index + match[0].length);
             textInput.oninput();
           };
           return;
