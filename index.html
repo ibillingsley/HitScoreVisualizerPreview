@@ -58,6 +58,7 @@
       left: 0;
       margin: 0;
       mix-blend-mode: screen;
+      text-shadow: 0 0 2px white;
     }
 
     .sidebar {
@@ -390,7 +391,7 @@
         if (bloomInput.checked) {
           const bloom = score.cloneNode(true);
           bloom.className = 'bloom';
-          bloom.style.filter = `blur(8px) opacity(${judgment.color[3]})`;
+          bloom.style.filter = `blur(7px) opacity(${judgment.color[3]})`;
           score.appendChild(bloom);
         }
         container.appendChild(score);
