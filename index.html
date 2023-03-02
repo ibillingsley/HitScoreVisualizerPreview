@@ -21,21 +21,35 @@
       margin: 0;
       height: 100vh;
       display: flex;
+      overflow: hidden;
       font-family: sans-serif;
+      background: var(--bg-color);
       --bg-color: black;
       --text-color: white;
       --border-color: #777;
     }
 
-    #scores {
-      width: 60vw;
+    #left,
+    #right {
+      display: flex;
+      flex-direction: column;
       min-width: 100px;
+      overflow: auto;
+    }
+
+    #left {
+      width: 60vw;
+      resize: horizontal;
+    }
+
+    #scores {
       display: flex;
       flex-direction: column;
       flex-wrap: wrap;
       justify-content: center;
       align-content: center;
       align-items: center;
+      flex: 1 1 auto;
       background: black url(images/glass-desert-env.jpg) center;
       background-size: cover;
       color: white;
@@ -44,7 +58,6 @@
       font-size: 150%;
       text-align: center;
       overflow: auto;
-      resize: horizontal;
     }
 
     .score {
@@ -71,7 +84,8 @@
 
     .toolbar {
       display: flex;
-      justify-content: flex-end;
+      flex-wrap: wrap;
+      align-items: center;
     }
 
     #file {
@@ -84,7 +98,7 @@
 
     #filename {
       flex-grow: 1;
-      width: 5em;
+      width: 4em;
       padding: 0 0.5em;
       background: var(--bg-color);
       color: var(--text-color);
@@ -95,7 +109,8 @@
     #text {
       flex-grow: 1;
       width: 100%;
-      min-width: 20em;
+      min-width: 16em;
+      min-height: 10em;
       background: inherit;
       color: inherit;
       font-family: monospace;
@@ -108,7 +123,7 @@
 
     label {
       margin-left: 1em;
-      font-size: 80%;
+      user-select: none;
     }
 
     #help {
@@ -165,23 +180,35 @@
     }
 
     .footer {
-      position: absolute;
-      bottom: 0.5em;
-      left: 0.5em;
-      font-size: 75%;
-      color: #777;
+      font-size: 80%;
+      padding: 0.25em 0.5em;
     }
 
-    .footer a {
+    .footer>* {
+      margin: 0 0.5em;
       color: #ccc;
       text-decoration: none;
+    }
+
+    .spacer {
+      flex: 1 1 0;
     }
 
   </style>
 </head>
 <body>
+  <div id="left">
   <div id="scores"></div>
-  <div class="sidebar">
+    <div class="toolbar footer">
+      <a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank">source</a>
+      <a href="https://github.com/ErisApps/HitScoreVisualizer#how-to-config-aka-config-explained" target="_blank">docs</a>
+      <div class="spacer"></div>
+      <label><input id="bloomInput" type="checkbox"> Bloom</label>
+      <label><input id="backgroundInput" type="checkbox" checked> Background</label>
+      <label><input id="helpInput" type="checkbox" checked> Tokens</label>
+    </div>
+  </div>
+  <div id="right" class="sidebar">
     <div class="toolbar">
       <input id="file" type="file" accept=".json">
       <input id="filename" type="text" value="default.json">
@@ -336,14 +363,6 @@
         <td colspan="2">&lt;color=#FFFFFF&gt;&hellip;&lt;/color&gt;</td>
       </tr>
     </table>
-    <div class="toolbar">
-      <label><input id="bloomInput" type="checkbox"> Bloom</label>
-      <label><input id="helpInput" type="checkbox" checked> Help</label>
-    </div>
-  </div>
-  <div class="footer">
-    <a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank">source</a> |
-    <a href="https://github.com/ErisApps/HitScoreVisualizer#how-to-config-aka-config-explained" target="_blank">docs</a>
   </div>
   <input id="color" type="color">
   <script>
@@ -355,6 +374,7 @@
     const bloomInput = document.getElementById('bloomInput');
     const help = document.getElementById('help');
     const helpInput = document.getElementById('helpInput');
+    const backgroundInput = document.getElementById('backgroundInput');
     const colorInput = document.getElementById('color');
     const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|color=(#[\dA-F]{6})/gi;
 
@@ -440,6 +460,10 @@
     textInput.oninput();
 
     bloomInput.oninput = textInput.oninput;
+
+    backgroundInput.oninput = () => {
+      scores.style.background = backgroundInput.checked ? '' : 'none';
+    };
 
     helpInput.oninput = () => {
       help.style.display = helpInput.checked ? 'table' : 'none';
