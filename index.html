@@ -100,9 +100,6 @@
       flex-grow: 1;
       width: 4em;
       padding: 0 0.5em;
-      background: var(--bg-color);
-      color: var(--text-color);
-      font-family: monospace;
       border: none;
     }
 
@@ -121,6 +118,13 @@
       outline: solid thin red;
     }
 
+    input[type=text],
+    input[type=number] {
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-family: monospace;
+    }
+
     label {
       margin-left: 1em;
       user-select: none;
@@ -136,6 +140,15 @@
       font-family: monospace;
       font-size: 125%;
       white-space: nowrap;
+    }
+
+    #help td:nth-child(3) {
+      width: 5em;
+    }
+
+    #help input {
+      width: 5em;
+      border: none;
     }
 
     textarea,
@@ -198,13 +211,14 @@
 </head>
 <body>
   <div id="left">
-  <div id="scores"></div>
+    <div id="scores"></div>
     <div class="toolbar footer">
       <a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank">source</a>
       <a href="https://github.com/ErisApps/HitScoreVisualizer#how-to-config-aka-config-explained" target="_blank">docs</a>
       <div class="spacer"></div>
       <label><input id="bloomInput" type="checkbox"> Bloom</label>
       <label><input id="backgroundInput" type="checkbox" checked> Background</label>
+      <label><input id="allInput" type="checkbox" checked> All Thresholds</label>
       <label><input id="helpInput" type="checkbox" checked> Tokens</label>
     </div>
   </div>
@@ -307,60 +321,65 @@
 </textarea>
     <table id="help">
       <tr>
-        <th colspan="2">Format Tokens</th>
+        <th colspan="3">Format Tokens</th>
       </tr>
       <tr>
         <td>%s</td>
         <td>Total cut score (0-115)</td>
+        <td><input id="sInput" type="text" value="115" disabled></td>
       </tr>
       <tr>
         <td>%b</td>
         <td>Before cut score (0-70)</td>
+        <td><input id="bInput" type="number" min="0" max="70" value="70"></td>
       </tr>
       <tr>
         <td>%c</td>
         <td>Accuracy score (0-15)</td>
+        <td><input id="cInput" type="number" min="0" max="15" value="15"></td>
       </tr>
       <tr>
         <td>%a</td>
         <td>After cut score (0-30)</td>
+        <td><input id="aInput" type="number" min="0" max="30" value="30"></td>
       </tr>
       <tr>
         <td>%t</td>
         <td>Time dependence (0-1)</td>
+        <td><input id="tInput" type="number" min="0" max="1" step="0.01" value="0.33"></td>
       </tr>
       <tr>
         <td>%B</td>
-        <td>Text matching threshold in <code>beforeCutAngleJudgments</code></td>
+        <td colspan="2">Text matching threshold in <code>beforeCutAngleJudgments</code></td>
       </tr>
       <tr>
         <td>%C</td>
-        <td>Text matching threshold in <code>accuracyJudgments</code></td>
+        <td colspan="2">Text matching threshold in <code>accuracyJudgments</code></td>
       </tr>
       <tr>
         <td>%A</td>
-        <td>Text matching threshold in <code>afterCutAngleJudgments</code></td>
+        <td colspan="2">Text matching threshold in <code>afterCutAngleJudgments</code></td>
       </tr>
       <tr>
         <td>%T</td>
-        <td>Text matching threshold in <code>timeDependencyJudgments</code></td>
+        <td colspan="2">Text matching threshold in <code>timeDependencyJudgments</code></td>
       </tr>
       <tr>
         <td>%n</td>
-        <td>Newline</td>
+        <td colspan="2">Newline</td>
       </tr>
       <tr>
         <td>%%</td>
-        <td>Percent symbol</td>
+        <td colspan="2">Percent symbol</td>
       </tr>
       <tr>
-        <th colspan="2">Text Formatting</th>
+        <th colspan="3">Text Formatting</th>
       </tr>
       <tr>
-        <td colspan="2">&lt;size=150%&gt;&hellip;&lt;/size&gt;</td>
+        <td colspan="3">&lt;size=150%&gt;&hellip;&lt;/size&gt;</td>
       </tr>
       <tr>
-        <td colspan="2">&lt;color=#FFFFFF&gt;&hellip;&lt;/color&gt;</td>
+        <td colspan="3">&lt;color=#FFFFFF&gt;&hellip;&lt;/color&gt;</td>
       </tr>
     </table>
   </div>
@@ -375,73 +394,120 @@
     const help = document.getElementById('help');
     const helpInput = document.getElementById('helpInput');
     const backgroundInput = document.getElementById('backgroundInput');
+    const allInput = document.getElementById('allInput');
+    const sInput = document.getElementById('sInput');
+    const bInput = document.getElementById('bInput');
+    const cInput = document.getElementById('cInput');
+    const aInput = document.getElementById('aInput');
+    const tInput = document.getElementById('tInput');
     const colorInput = document.getElementById('color');
     const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|color=(#[\dA-F]{6})/gi;
 
     function render(json) {
       const displayMode = json.displayMode || (json.majorVersion ? 'default' : 'format');
+      const tokens = getTokens(json);
       container.innerHTML = '';
-      for (const judgment of json.judgments) {
-        judgment.threshold = judgment.threshold || 0;
-        judgment.text = judgment.text || '';
-        const score = document.createElement('p');
-        switch (displayMode) {
-          case 'format':
-            score.innerHTML = format(judgment, json);
-            break;
-          case 'numeric':
-            score.textContent = judgment.threshold;
-            break;
-          case 'textOnly':
-            score.innerHTML = rich(judgment.text);
-            break;
-          case 'scoreOnTop':
-            score.appendChild(document.createElement('span')).textContent = judgment.threshold;
-            score.appendChild(document.createElement('br'));
-            score.appendChild(document.createElement('span')).innerHTML = rich(judgment.text);
-            break;
-          default:
-            score.appendChild(document.createElement('span')).innerHTML = rich(judgment.text);
-            score.appendChild(document.createElement('br'));
-            score.appendChild(document.createElement('span')).textContent = judgment.threshold;
-            break;
+      if (allInput.checked) {
+        // Render all threshold scores
+        for (const judgment of json.judgments) {
+          tokens.s = judgment.threshold || 0;
+          container.appendChild(renderScore(displayMode, judgment, tokens));
         }
-        score.className = 'score';
-        score.style.color = `rgb(${judgment.color.slice(0, 3).map(c => c * 255).join(',')})`;
-        if (bloomInput.checked) {
-          const bloom = score.cloneNode(true);
-          bloom.className = 'bloom';
-          bloom.style.filter = `blur(7px) opacity(${judgment.color[3]})`;
-          score.appendChild(bloom);
+      } else {
+        // Render single score
+        let index = json.judgments.findIndex(j => (j.threshold || 0) <= tokens.s);
+        if (index < 0) index = json.judgments.length - 1;
+        const judgment = json.judgments[index];
+        if (judgment.fade && index > 0) {
+          const previous = json.judgments[index - 1];
+          const ratio = (tokens.s - (judgment.threshold || 0)) / (previous.threshold - (judgment.threshold || 0));
+          judgment.color = judgment.color.map((v, i) => v * (1 - ratio) + previous.color[i] * ratio);
         }
-        container.appendChild(score);
+        container.appendChild(renderScore(displayMode, judgment, tokens));
       }
     }
 
+    function renderScore(displayMode, judgment, tokens) {
+      const text = judgment.text || '';
+      const score = document.createElement('p');
+      score.className = 'score';
+      switch (displayMode) {
+        case 'format':
+          score.innerHTML = rich(format(text, tokens));
+          break;
+        case 'numeric':
+          score.textContent = tokens.s;
+          break;
+        case 'textOnly':
+          score.innerHTML = rich(text);
+          break;
+        case 'scoreOnTop':
+          score.appendChild(document.createElement('span')).textContent = tokens.s;
+          score.appendChild(document.createElement('br'));
+          score.appendChild(document.createElement('span')).innerHTML = rich(text);
+          break;
+        default:
+          score.appendChild(document.createElement('span')).innerHTML = rich(text);
+          score.appendChild(document.createElement('br'));
+          score.appendChild(document.createElement('span')).textContent = tokens.s;
+          break;
+      }
+      const color = judgment.color || [0, 0, 0, 0];
+      score.style.color = `rgb(${color.slice(0, 3).map(c => c * 255).join(',')})`;
+      if (bloomInput.checked) {
+        const bloom = score.cloneNode(true);
+        bloom.className = 'bloom';
+        bloom.style.filter = `blur(7px) opacity(${color[3]})`;
+        score.appendChild(bloom);
+      }
+      return score;
+    }
+
     function rich(text) {
-      text = text.replaceAll(/<size=([^>]+)>/g, '<span style="font-size: $1">');
-      text = text.replaceAll('</size>', '</span>');
-      text = text.replaceAll(/<color=([^>]+)>/g, '<span style="color: $1">');
-      text = text.replaceAll('</color>', '</span>');
+      text = text.replaceAll('<', '&lt;');
+      text = text.replaceAll(/&lt;size=([^>]+)>/g, '<span style="font-size: $1">');
+      text = text.replaceAll(/&lt;\/size[^>]*>/g, '</span>');
+      text = text.replaceAll(/&lt;color=([^>]+)>/g, '<span style="color: $1">');
+      text = text.replaceAll(/&lt;\/color[^>]*>/g, '</span>');
+      text = text.replaceAll('\n', '<br>');
       return text;
     }
 
-    function format(judgment, json) {
-      let text = rich(judgment.text);
-      text = text.replaceAll('%b', 70);
-      text = text.replaceAll('%c', 15);
-      text = text.replaceAll('%a', 30);
-      text = text.replaceAll('%t', (5 / 9 * 10 ** (json.timeDependencyDecimalOffset || 0)).toFixed(json.timeDependencyDecimalPrecision || 0));
-      text = text.replaceAll('%B', json.beforeCutAngleJudgments?.[0]?.text || '');
-      text = text.replaceAll('%C', json.accuracyJudgments?.[0]?.text || '');
-      text = text.replaceAll('%A', json.afterCutAngleJudgments?.[0]?.text || '');
-      text = text.replaceAll('%T', json.timeDependencyJudgments?.[0]?.text || '');
-      text = text.replaceAll('%s', judgment.threshold);
-      text = text.replaceAll('%n', '<br>');
-      text = text.replaceAll('%%', '%');
+    function format(text, tokens) {
+      for (const token in tokens) {
+        text = text.replaceAll('%' + token, tokens[token]);
+      }
       return text;
     }
 
+    function getTokens(json) {
+      const b = Number(bInput.value);
+      const c = Number(cInput.value);
+      const a = Number(aInput.value);
+      const t = Number(tInput.value);
+      const s = b + c + a;
+      sInput.value = s;
+      const tokens = {
+        s: s,
+        b: b,
+        c: c,
+        a: a,
+        t: (t * 10 ** (json.timeDependencyDecimalOffset || 0)).toFixed(json.timeDependencyDecimalPrecision || 0),
+        B: '',
+        C: '',
+        A: '',
+        T: '',
+        n: '\n',
+        '%': '%'
+      }
+      tokens.B = (json.beforeCutAngleJudgments?.find(j => (j.threshold || 0) <= b)?.text) || '';
+      tokens.C = (json.accuracyJudgments?.find(j => (j.threshold || 0) <= c)?.text) || '';
+      tokens.A = (json.afterCutAngleJudgments?.find(j => (j.threshold || 0) <= a)?.text) || '';
+      tokens.T = (json.timeDependencyJudgments?.find(j => (j.threshold || 0) <= t)?.text) || '';
+      return tokens;
+    }
+
+    // Text input
     textInput.oninput = () => {
       textInput.classList.add('error');
       let json = null;
@@ -459,15 +525,23 @@
     }
     textInput.oninput();
 
+    // Preview inputs
+    bInput.oninput = textInput.oninput;
+    cInput.oninput = textInput.oninput;
+    aInput.oninput = textInput.oninput;
+    tInput.oninput = textInput.oninput;
+    allInput.oninput = textInput.oninput;
     bloomInput.oninput = textInput.oninput;
 
     backgroundInput.oninput = () => {
       scores.style.background = backgroundInput.checked ? '' : 'none';
     };
+    backgroundInput.oninput();
 
     helpInput.oninput = () => {
       help.style.display = helpInput.checked ? 'table' : 'none';
     };
+    helpInput.oninput();
 
     // File input
     async function setFile(file) {
