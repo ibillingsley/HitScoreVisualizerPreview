@@ -115,6 +115,7 @@
     }
 
     #text.error {
+      border-color: red;
       outline: solid thin red;
     }
 
@@ -611,9 +612,9 @@
               value = 'color=' + colorInput.value.toUpperCase();
             } else {
               const hex = parseInt(colorInput.value.substring(1), 16);
-              const r = (((hex >> 16) & 255) / 255).toFixed(3);
-              const g = (((hex >> 8) & 255) / 255).toFixed(3);
-              const b = ((hex & 255) / 255).toFixed(3);
+              const r = (((hex >> 16) & 255) / 255).toFixed(3).replace(/(\..+?)0+$/, '$1');
+              const g = (((hex >> 8) & 255) / 255).toFixed(3).replace(/(\..+?)0+$/, '$1');
+              const b = ((hex & 255) / 255).toFixed(3).replace(/(\..+?)0+$/, '$1');
               const split = match[0].split(',');
               split[0] = split[0].replace(/[\d.]+/, r);
               split[1] = split[1].replace(/[\d.]+/, g);
