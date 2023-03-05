@@ -42,6 +42,19 @@
       resize: horizontal;
     }
 
+    .layout2 #left {
+      order: 1;
+      width: auto;
+      flex: 1 1 100px;
+      resize: none;
+    }
+
+    .layout2 #right {
+      width: 40vw;
+      flex: 0 0 auto;
+      resize: horizontal;
+    }
+
     #scores {
       display: flex;
       flex-direction: column;
@@ -202,6 +215,10 @@
       margin: 0 0.5em;
       color: #ccc;
       text-decoration: none;
+    }
+
+    .layout2 .footer {
+      flex-direction: row-reverse;
     }
 
     .spacer {
@@ -387,6 +404,8 @@
   <input id="color" type="color">
   <script>
     const container = document.getElementById('scores');
+    const left = document.getElementById('left');
+    const right = document.getElementById('right');
     const textInput = document.getElementById('text');
     const fileInput = document.getElementById('file');
     const fileName = document.getElementById('filename');
@@ -642,6 +661,14 @@
       }
     });
 
+    // Layout swap
+    document.addEventListener('mouseup', () => {
+      if (left.clientWidth <= 100 || right.clientWidth <= 100) {
+        left.removeAttribute('style');
+        right.removeAttribute('style');
+        document.body.classList.toggle('layout2');
+      }
+    });
   </script>
 </body>
 </html>
