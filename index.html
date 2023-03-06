@@ -243,10 +243,77 @@
   <div id="right" class="sidebar">
     <div class="toolbar">
       <input id="file" type="file" accept=".json">
-      <input id="filename" type="text" value="default.json">
+      <input id="filename" type="text">
       <button id="download">Download</button>
     </div>
-    <textarea id="text" spellcheck="false">{
+    <textarea id="text" spellcheck="false"></textarea>
+    <table id="help">
+      <tr>
+        <th colspan="3">Format Tokens</th>
+      </tr>
+      <tr>
+        <td>%s</td>
+        <td>Total cut score (0-115)</td>
+        <td><input id="sInput" type="text" value="115" disabled></td>
+      </tr>
+      <tr>
+        <td>%b</td>
+        <td>Before cut score (0-70)</td>
+        <td><input id="bInput" type="number" min="0" max="70" value="70"></td>
+      </tr>
+      <tr>
+        <td>%c</td>
+        <td>Accuracy score (0-15)</td>
+        <td><input id="cInput" type="number" min="0" max="15" value="15"></td>
+      </tr>
+      <tr>
+        <td>%a</td>
+        <td>After cut score (0-30)</td>
+        <td><input id="aInput" type="number" min="0" max="30" value="30"></td>
+      </tr>
+      <tr>
+        <td>%t</td>
+        <td>Time dependence (0-1)</td>
+        <td><input id="tInput" type="number" min="0" max="1" step="0.01" value="0.33"></td>
+      </tr>
+      <tr>
+        <td>%B</td>
+        <td colspan="2">Text matching threshold in <code>beforeCutAngleJudgments</code></td>
+      </tr>
+      <tr>
+        <td>%C</td>
+        <td colspan="2">Text matching threshold in <code>accuracyJudgments</code></td>
+      </tr>
+      <tr>
+        <td>%A</td>
+        <td colspan="2">Text matching threshold in <code>afterCutAngleJudgments</code></td>
+      </tr>
+      <tr>
+        <td>%T</td>
+        <td colspan="2">Text matching threshold in <code>timeDependencyJudgments</code></td>
+      </tr>
+      <tr>
+        <td>%n</td>
+        <td colspan="2">Newline</td>
+      </tr>
+      <tr>
+        <td>%%</td>
+        <td colspan="2">Percent symbol</td>
+      </tr>
+      <tr>
+        <th colspan="3">Text Formatting</th>
+      </tr>
+      <tr>
+        <td colspan="3">&lt;size=150%&gt;&hellip;&lt;/size&gt;</td>
+      </tr>
+      <tr>
+        <td colspan="3">&lt;color=#FFFFFF&gt;&hellip;&lt;/color&gt;</td>
+      </tr>
+    </table>
+  </div>
+  <input id="color" type="color">
+  <script>
+    const defaultConfig = `{
   "majorVersion": 3,
   "minorVersion": 3,
   "patchVersion": 3,
@@ -336,73 +403,7 @@
     }
   ]
 }
-</textarea>
-    <table id="help">
-      <tr>
-        <th colspan="3">Format Tokens</th>
-      </tr>
-      <tr>
-        <td>%s</td>
-        <td>Total cut score (0-115)</td>
-        <td><input id="sInput" type="text" value="115" disabled></td>
-      </tr>
-      <tr>
-        <td>%b</td>
-        <td>Before cut score (0-70)</td>
-        <td><input id="bInput" type="number" min="0" max="70" value="70"></td>
-      </tr>
-      <tr>
-        <td>%c</td>
-        <td>Accuracy score (0-15)</td>
-        <td><input id="cInput" type="number" min="0" max="15" value="15"></td>
-      </tr>
-      <tr>
-        <td>%a</td>
-        <td>After cut score (0-30)</td>
-        <td><input id="aInput" type="number" min="0" max="30" value="30"></td>
-      </tr>
-      <tr>
-        <td>%t</td>
-        <td>Time dependence (0-1)</td>
-        <td><input id="tInput" type="number" min="0" max="1" step="0.01" value="0.33"></td>
-      </tr>
-      <tr>
-        <td>%B</td>
-        <td colspan="2">Text matching threshold in <code>beforeCutAngleJudgments</code></td>
-      </tr>
-      <tr>
-        <td>%C</td>
-        <td colspan="2">Text matching threshold in <code>accuracyJudgments</code></td>
-      </tr>
-      <tr>
-        <td>%A</td>
-        <td colspan="2">Text matching threshold in <code>afterCutAngleJudgments</code></td>
-      </tr>
-      <tr>
-        <td>%T</td>
-        <td colspan="2">Text matching threshold in <code>timeDependencyJudgments</code></td>
-      </tr>
-      <tr>
-        <td>%n</td>
-        <td colspan="2">Newline</td>
-      </tr>
-      <tr>
-        <td>%%</td>
-        <td colspan="2">Percent symbol</td>
-      </tr>
-      <tr>
-        <th colspan="3">Text Formatting</th>
-      </tr>
-      <tr>
-        <td colspan="3">&lt;size=150%&gt;&hellip;&lt;/size&gt;</td>
-      </tr>
-      <tr>
-        <td colspan="3">&lt;color=#FFFFFF&gt;&hellip;&lt;/color&gt;</td>
-      </tr>
-    </table>
-  </div>
-  <input id="color" type="color">
-  <script>
+`;
     const container = document.getElementById('scores');
     const left = document.getElementById('left');
     const right = document.getElementById('right');
@@ -527,6 +528,42 @@
       return tokens;
     }
 
+    function save(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function load(key, defaultValue) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) || defaultValue;
+      } catch (e) {
+        console.error(e);
+      }
+      return defaultValue;
+    }
+
+    // Persist UI state
+    if (!text.value) text.value = load('text', defaultConfig);
+    if (!fileName.value) fileName.value = load('filename', 'default.json');
+
+    const layout = load('layout', ['', '', '']);
+    document.body.className = layout[0];
+    left.setAttribute('style', layout[1]);
+    right.setAttribute('style', layout[2]);
+
+    const toggles = load('toggles', [false, true, true, true]);
+    [bloomInput, backgroundInput, allInput, helpInput].map((t, i) => t.checked = toggles[i]);
+
+    window.onbeforeunload = () => {
+      save('text', textInput.value);
+      save('filename', fileName.value);
+      save('toggles', [bloomInput, backgroundInput, allInput, helpInput].map(t => t.checked));
+      save('layout', [document.body.className, left.getAttribute('style') || '', right.getAttribute('style') || '']);
+    };
+
     // Text input
     textInput.oninput = () => {
       textInput.classList.add('error');
@@ -594,7 +631,7 @@
 
     // Download
     download.onclick = function () {
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       const blob = new Blob([textInput.value], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       a.href = url;
