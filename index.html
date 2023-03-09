@@ -257,6 +257,11 @@
         <td><input id="sInput" type="text" value="115" disabled></td>
       </tr>
       <tr>
+        <td>%p</td>
+        <td>Total cut score percent (0-100)</td>
+        <td><input id="pInput" type="text" value="100" disabled></td>
+      </tr>
+      <tr>
         <td>%b</td>
         <td>Before cut score (0-70)</td>
         <td><input id="bInput" type="number" min="0" max="70" value="70"></td>
@@ -299,9 +304,6 @@
       <tr>
         <td>%%</td>
         <td colspan="2">Percent symbol</td>
-      </tr>
-      <tr>
-        <th colspan="3">Text Formatting</th>
       </tr>
       <tr>
         <td colspan="3">&lt;size=150%&gt;&hellip;&lt;/size&gt;</td>
@@ -417,6 +419,7 @@
     const backgroundInput = document.getElementById('backgroundInput');
     const allInput = document.getElementById('allInput');
     const sInput = document.getElementById('sInput');
+    const pInput = document.getElementById('pInput');
     const bInput = document.getElementById('bInput');
     const cInput = document.getElementById('cInput');
     const aInput = document.getElementById('aInput');
@@ -432,6 +435,7 @@
         // Render all threshold scores
         for (const judgment of json.judgments) {
           tokens.s = judgment.threshold || 0;
+          tokens.p = Math.floor(tokens.s / 1.15);
           container.appendChild(renderScore(displayMode, judgment, tokens));
         }
       } else {
@@ -507,9 +511,12 @@
       const a = Number(aInput.value);
       const t = Number(tInput.value);
       const s = b + c + a;
+      const p = Math.floor(s / 1.15);
       sInput.value = s;
+      pInput.value = p;
       const tokens = {
         s: s,
+        p: p,
         b: b,
         c: c,
         a: a,
