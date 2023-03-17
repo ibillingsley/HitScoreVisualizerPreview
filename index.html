@@ -630,7 +630,7 @@
 
     document.body.addEventListener('drop', (e) => {
       const file = e.dataTransfer.files[0];
-      if (file && file.type === 'application/json' && e.target !== fileInput) {
+      if (file && (file.type === 'application/json' || file.type === 'text/plain') && e.target !== fileInput) {
         e.preventDefault();
         setFile(file);
       }
