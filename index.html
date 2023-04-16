@@ -566,9 +566,12 @@
       try {
         json = JSON.parse(textInput.value);
       } catch (e) {
-        console.warn(e);
-        // Remove trailing commas
-        json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, '$1'));
+        try {
+          // Remove trailing commas
+          json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, '$1'));
+        } catch (e) {
+          console.warn(e);
+        }
       }
       if (json && json.judgments) {
         render(json);
