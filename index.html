@@ -132,6 +132,12 @@
       outline: solid thin red;
     }
 
+    #errorMessage {
+      padding: 0 0.5em;
+      background-color: darkred;
+      font-family: monospace;
+    }
+
     input[type=text],
     input[type=number] {
       background: var(--bg-color);
@@ -247,6 +253,7 @@
       <button id="download">Download</button>
     </div>
     <textarea id="text" spellcheck="false"></textarea>
+    <div id="errorMessage"></div>
     <table id="help">
       <tr>
         <th colspan="3">Format Tokens</th>
@@ -400,6 +407,7 @@
     const textInput = document.getElementById('text');
     const fileInput = document.getElementById('file');
     const fileName = document.getElementById('filename');
+    const errorMessage = document.getElementById('errorMessage');
     const download = document.getElementById('download');
     const bloomInput = document.getElementById('bloomInput');
     const help = document.getElementById('help');
@@ -562,6 +570,7 @@
     // Text input
     textInput.oninput = () => {
       textInput.classList.add('error');
+      errorMessage.textContent = '';
       let json = null;
       try {
         json = JSON.parse(textInput.value);
@@ -570,7 +579,15 @@
           // Remove trailing commas
           json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, '$1'));
         } catch (e) {
+          // Show parse error
           console.warn(e);
+          let message = e.message || '';
+          const match = message.match(/position ([\d]+)$/);
+          if (match && match[1]) {
+            const line = textInput.value.substring(0, match[1]).split('\n').length;
+            message += ` (line ${line})`;
+          }
+          errorMessage.textContent = message;
         }
       }
       if (json && json.judgments) {
