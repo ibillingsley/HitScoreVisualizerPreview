@@ -510,25 +510,20 @@
       const p = Math.floor(s / 1.15);
       sInput.value = s;
       pInput.value = p;
-      const tokens = {
+      return {
         s: s,
         p: p,
         b: b,
         c: c,
         a: a,
         t: (t * 10 ** (json.timeDependencyDecimalOffset || 0)).toFixed(json.timeDependencyDecimalPrecision || 0),
-        B: '',
-        C: '',
-        A: '',
-        T: '',
+        B: (json.beforeCutAngleJudgments?.find(j => (j.threshold || 0) <= b)?.text) || '',
+        C: (json.accuracyJudgments?.find(j => (j.threshold || 0) <= c)?.text) || '',
+        A: (json.afterCutAngleJudgments?.find(j => (j.threshold || 0) <= a)?.text) || '',
+        T: (json.timeDependencyJudgments?.find(j => (j.threshold || 0) <= t)?.text) || '',
         n: '\n',
         '%': '%'
-      }
-      tokens.B = (json.beforeCutAngleJudgments?.find(j => (j.threshold || 0) <= b)?.text) || '';
-      tokens.C = (json.accuracyJudgments?.find(j => (j.threshold || 0) <= c)?.text) || '';
-      tokens.A = (json.afterCutAngleJudgments?.find(j => (j.threshold || 0) <= a)?.text) || '';
-      tokens.T = (json.timeDependencyJudgments?.find(j => (j.threshold || 0) <= t)?.text) || '';
-      return tokens;
+      };
     }
 
     function save(key, value) {
@@ -554,17 +549,18 @@
 
     const layout = load('layout', ['', '', '']);
     document.body.className = layout[0];
-    left.setAttribute('style', layout[1]);
-    right.setAttribute('style', layout[2]);
+    left.style.width = layout[1];
+    right.style.width = layout[2];
 
     const toggles = load('toggles', [false, true, true, true]);
-    [bloomInput, backgroundInput, allInput, helpInput].map((t, i) => t.checked = toggles[i]);
+    const checkboxes = [bloomInput, backgroundInput, allInput, helpInput];
+    checkboxes.forEach((t, i) => t.checked = toggles[i]);
 
     window.onbeforeunload = () => {
       save('text', textInput.value);
       save('filename', fileName.value);
-      save('toggles', [bloomInput, backgroundInput, allInput, helpInput].map(t => t.checked));
-      save('layout', [document.body.className, left.getAttribute('style') || '', right.getAttribute('style') || '']);
+      save('toggles', checkboxes.map(t => t.checked));
+      save('layout', [document.body.className, left.style.width || '', right.style.width || '']);
     };
 
     // Text input
@@ -715,9 +711,9 @@
 
     // Layout swap
     document.addEventListener('mouseup', () => {
-      if (left.clientWidth <= 100 || right.clientWidth <= 100) {
-        left.removeAttribute('style');
-        right.removeAttribute('style');
+      if ((left.style.width || right.style.width) && Math.min(left.clientWidth, right.clientWidth) <= 100) {
+        left.style.width = '';
+        right.style.width = '';
         document.body.classList.toggle('layout2');
       }
     });
