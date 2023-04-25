@@ -21,33 +21,64 @@ body {
 	--border-color: #777;
 }
 
-#left,
-#right {
+#previewColumn,
+#editorColumn {
 	display: flex;
 	flex-direction: column;
 	min-width: 100px;
 	overflow: auto;
 }
 
-#left {
+#previewColumn {
 	width: 60vw;
 	resize: horizontal;
 }
 
-.layout2 #left {
+.layout2 #previewColumn {
 	order: 1;
 	width: auto;
 	flex: 1 1 100px;
 	resize: none;
 }
 
-.layout2 #right {
+.layout2 #editorColumn {
 	width: 40vw;
 	flex: 0 0 auto;
 	resize: horizontal;
 }
 
-#scores {
+#previewAll {
+	background: black url(images/glass-desert-env.jpg) center;
+	background-size: cover;
+	border-bottom: 1px solid var(--border-color);
+}
+
+#preview {
+	flex: 0 0 auto;
+	min-height: 9.5em;
+}
+
+#previewToolbar {
+	flex-direction: row;
+	padding-bottom: 0.5em;
+}
+
+#bRangeInput {
+	flex-grow: 70;
+	width: 70px;
+}
+
+#cRangeInput {
+	flex-grow: 15;
+	width: 15px;
+}
+
+#aRangeInput {
+	flex-grow: 30;
+	width: 30px;
+}
+
+.scores {
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
@@ -55,8 +86,6 @@ body {
 	align-content: center;
 	align-items: center;
 	flex: 1 1 auto;
-	background: black url(images/glass-desert-env.jpg) center;
-	background-size: cover;
 	color: white;
 	font-family: "Teko", sans-serif;
 	font-weight: 600;
@@ -79,7 +108,7 @@ body {
 	text-shadow: 0 0 2px white;
 }
 
-.sidebar {
+#editorColumn {
 	flex: 1 1 100px;
 	display: flex;
 	flex-direction: column;
@@ -135,6 +164,10 @@ input[type="number"] {
 	background: var(--bg-color);
 	color: var(--text-color);
 	font-family: monospace;
+}
+
+input[type="range"] {
+	min-width: 4em;
 }
 
 label {
@@ -212,7 +245,6 @@ code {
 .footer > * {
 	margin: 0 0.5em;
 	color: #ccc;
-	text-decoration: none;
 }
 
 .layout2 .footer {

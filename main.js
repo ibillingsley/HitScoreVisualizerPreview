@@ -78,9 +78,11 @@ const defaultConfig = `{
 }
 `;
 
-const container = document.getElementById("scores");
-const left = document.getElementById("left");
-const right = document.getElementById("right");
+const preview = document.getElementById("preview");
+const previewAll = document.getElementById("previewAll");
+const previewToolbar = document.getElementById("previewToolbar");
+const previewColumn = document.getElementById("previewColumn");
+const editorColumn = document.getElementById("editorColumn");
 const textInput = document.getElementById("textInput");
 const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("filenameInput");
@@ -90,38 +92,39 @@ const bloomInput = document.getElementById("bloomInput");
 const help = document.getElementById("help");
 const helpInput = document.getElementById("helpInput");
 const backgroundInput = document.getElementById("backgroundInput");
-const allInput = document.getElementById("allInput");
+const previewInput = document.getElementById("previewInput");
 const sInput = document.getElementById("sInput");
 const pInput = document.getElementById("pInput");
 const bInput = document.getElementById("bInput");
 const cInput = document.getElementById("cInput");
 const aInput = document.getElementById("aInput");
 const tInput = document.getElementById("tInput");
+const bRangeInput = document.getElementById("bRangeInput");
+const cRangeInput = document.getElementById("cRangeInput");
+const aRangeInput = document.getElementById("aRangeInput");
 const colorInput = document.getElementById("colorInput");
 const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|color=(#[\dA-F]{6})/gi;
 
 function render(json) {
 	const displayMode = json.displayMode || (json.majorVersion ? "default" : "format");
 	const tokens = getTokens(json);
-	container.innerHTML = "";
-	if (allInput.checked) {
-		// Render all threshold scores
-		for (const judgment of json.judgments) {
-			tokens.s = judgment.threshold || 0;
-			tokens.p = Math.floor(tokens.s / 1.15);
-			container.appendChild(renderScore(displayMode, judgment, tokens));
-		}
-	} else {
-		// Render single score
-		let index = json.judgments.findIndex((j) => (j.threshold || 0) <= tokens.s);
-		if (index < 0) index = json.judgments.length - 1;
-		const judgment = json.judgments[index];
-		if (judgment.fade && index > 0) {
-			const previous = json.judgments[index - 1];
-			const ratio = (tokens.s - (judgment.threshold || 0)) / (previous.threshold - (judgment.threshold || 0));
-			judgment.color = judgment.color.map((v, i) => v * (1 - ratio) + previous.color[i] * ratio);
-		}
-		container.appendChild(renderScore(displayMode, judgment, tokens));
+	preview.innerHTML = "";
+	previewAll.innerHTML = "";
+	// Render single score
+	let index = json.judgments.findIndex((j) => (j.threshold || 0) <= tokens.s);
+	if (index < 0) index = json.judgments.length - 1;
+	const judgment = Object.assign({}, json.judgments[index]);
+	if (judgment.fade && index > 0) {
+		const previous = json.judgments[index - 1];
+		const ratio = (tokens.s - (judgment.threshold || 0)) / (previous.threshold - (judgment.threshold || 0));
+		judgment.color = judgment.color.map((v, i) => v * (1 - ratio) + previous.color[i] * ratio);
+	}
+	preview.appendChild(renderScore(displayMode, judgment, tokens));
+	// Render all threshold scores
+	for (const judgment of json.judgments) {
+		tokens.s = judgment.threshold || 0;
+		tokens.p = Math.floor(tokens.s / 1.15);
+		previewAll.appendChild(renderScore(displayMode, judgment, tokens));
 	}
 }
 
@@ -186,10 +189,8 @@ function getTokens(json) {
 	const c = Number(cInput.value);
 	const a = Number(aInput.value);
 	const t = Number(tInput.value);
-	const s = b + c + a;
-	const p = Math.floor(s / 1.15);
-	sInput.value = s + "";
-	pInput.value = p + "";
+	const s = Number(sInput.value);
+	const p = Number(pInput.value);
 	return {
 		s: s,
 		p: p,
@@ -229,11 +230,11 @@ if (!fileName.value) fileName.value = load("filename", "default.json");
 
 const layout = load("layout", ["", "", ""]);
 document.body.className = layout[0];
-left.style.width = layout[1];
-right.style.width = layout[2];
+previewColumn.style.width = layout[1];
+editorColumn.style.width = layout[2];
 
 const toggles = load("toggles", [false, true, true, true]);
-const checkboxes = [bloomInput, backgroundInput, allInput, helpInput];
+const checkboxes = [bloomInput, backgroundInput, previewInput, helpInput];
 checkboxes.forEach((t, i) => (t.checked = toggles[i]));
 
 window.onbeforeunload = () => {
@@ -243,7 +244,7 @@ window.onbeforeunload = () => {
 		"toggles",
 		checkboxes.map((t) => t.checked)
 	);
-	save("layout", [document.body.className, left.style.width || "", right.style.width || ""]);
+	save("layout", [document.body.className, previewColumn.style.width || "", editorColumn.style.width || ""]);
 };
 
 // Text input
@@ -276,21 +277,50 @@ textInput.oninput = () => {
 };
 textInput.oninput();
 
-// Preview inputs
-bInput.oninput = textInput.oninput;
-cInput.oninput = textInput.oninput;
-aInput.oninput = textInput.oninput;
-tInput.oninput = textInput.oninput;
-allInput.oninput = textInput.oninput;
+// Token inputs
+function onTokenInput() {
+	const s = Number(bInput.value) + Number(cInput.value) + Number(aInput.value);
+	const p = Math.floor(s / 1.15);
+	sInput.value = s + "";
+	pInput.value = p + "";
+	bRangeInput.value = bInput.value;
+	cRangeInput.value = cInput.value;
+	aRangeInput.value = aInput.value;
+	textInput.oninput();
+}
+
+bInput.oninput = onTokenInput;
+cInput.oninput = onTokenInput;
+aInput.oninput = onTokenInput;
+tInput.oninput = onTokenInput;
+
+function onRangeInput() {
+	bInput.value = bRangeInput.value;
+	cInput.value = cRangeInput.value;
+	aInput.value = aRangeInput.value;
+	onTokenInput();
+}
+
+bRangeInput.oninput = onRangeInput;
+cRangeInput.oninput = onRangeInput;
+aRangeInput.oninput = onRangeInput;
+
+// Checkbox inputs
+previewInput.oninput = () => {
+	preview.style.display = previewInput.checked ? "" : "none";
+	previewToolbar.style.display = previewInput.checked ? "" : "none";
+};
+previewInput.oninput();
+
 bloomInput.oninput = textInput.oninput;
 
 backgroundInput.oninput = () => {
-	container.style.background = backgroundInput.checked ? "" : "none";
+	previewAll.style.background = backgroundInput.checked ? "" : "none";
 };
 backgroundInput.oninput();
 
 helpInput.oninput = () => {
-	help.style.display = helpInput.checked ? "table" : "none";
+	help.style.display = helpInput.checked ? "" : "none";
 };
 helpInput.oninput();
 
@@ -399,9 +429,12 @@ document.body.addEventListener("click", (e) => {
 
 // Layout swap
 document.addEventListener("mouseup", () => {
-	if ((left.style.width || right.style.width) && Math.min(left.clientWidth, right.clientWidth) <= 100) {
-		left.style.width = "";
-		right.style.width = "";
+	if (
+		(previewColumn.style.width || editorColumn.style.width) &&
+		Math.min(previewColumn.clientWidth, editorColumn.clientWidth) <= 100
+	) {
+		previewColumn.style.width = "";
+		editorColumn.style.width = "";
 		document.body.classList.toggle("layout2");
 	}
 });

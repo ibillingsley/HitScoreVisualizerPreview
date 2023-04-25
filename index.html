@@ -8,19 +8,25 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="left">
-    <div id="scores"></div>
+  <div id="previewColumn">
+    <div id="previewAll" class="scores"></div>
+    <div id="preview" class="scores"></div>
+    <div id="previewToolbar" class="toolbar footer">
+      <label for="bRangeInput">Before</label><input id="bRangeInput" type="range" min="0" max="70" value="70">
+      <label for="cRangeInput">Accuracy</label><input id="cRangeInput" type="range" min="0" max="15" value="15">
+      <label for="aRangeInput">After</label><input id="aRangeInput" type="range" min="0" max="30" value="30">
+    </div>
     <div class="toolbar footer">
-      <a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank">source</a>
-      <a href="https://github.com/ErisApps/HitScoreVisualizer#how-to-config-aka-config-explained" target="_blank">docs</a>
+      <a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank">Source</a>
+      <a href="https://github.com/ErisApps/HitScoreVisualizer#how-to-config-aka-config-explained" target="_blank">Docs</a>
       <div class="spacer"></div>
       <label><input id="bloomInput" type="checkbox"> Bloom</label>
       <label><input id="backgroundInput" type="checkbox" checked> Background</label>
-      <label><input id="allInput" type="checkbox" checked> All Thresholds</label>
+      <label><input id="previewInput" type="checkbox" checked> Preview</label>
       <label><input id="helpInput" type="checkbox" checked> Tokens</label>
     </div>
   </div>
-  <div id="right" class="sidebar">
+  <div id="editorColumn">
     <div class="toolbar">
       <input id="fileInput" type="file" accept=".json">
       <input id="filenameInput" type="text">
