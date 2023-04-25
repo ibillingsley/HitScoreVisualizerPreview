@@ -81,9 +81,9 @@ const defaultConfig = `{
 const container = document.getElementById("scores");
 const left = document.getElementById("left");
 const right = document.getElementById("right");
-const textInput = document.getElementById("text");
-const fileInput = document.getElementById("file");
-const fileName = document.getElementById("filename");
+const textInput = document.getElementById("textInput");
+const fileInput = document.getElementById("fileInput");
+const fileName = document.getElementById("filenameInput");
 const errorMessage = document.getElementById("errorMessage");
 const download = document.getElementById("download");
 const bloomInput = document.getElementById("bloomInput");
@@ -97,7 +97,7 @@ const bInput = document.getElementById("bInput");
 const cInput = document.getElementById("cInput");
 const aInput = document.getElementById("aInput");
 const tInput = document.getElementById("tInput");
-const colorInput = document.getElementById("color");
+const colorInput = document.getElementById("colorInput");
 const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|color=(#[\dA-F]{6})/gi;
 
 function render(json) {
@@ -188,8 +188,8 @@ function getTokens(json) {
 	const t = Number(tInput.value);
 	const s = b + c + a;
 	const p = Math.floor(s / 1.15);
-	sInput.value = s;
-	pInput.value = p;
+	sInput.value = s + "";
+	pInput.value = p + "";
 	return {
 		s: s,
 		p: p,
@@ -216,7 +216,7 @@ function save(key, value) {
 
 function load(key, defaultValue) {
 	try {
-		return JSON.parse(localStorage.getItem(key)) || defaultValue;
+		return JSON.parse(localStorage.getItem(key) || "") || defaultValue;
 	} catch (e) {
 		console.error(e);
 	}
@@ -224,7 +224,7 @@ function load(key, defaultValue) {
 }
 
 // Persist UI state
-if (!text.value) text.value = load("text", defaultConfig);
+if (!textInput.value) textInput.value = load("text", defaultConfig);
 if (!fileName.value) fileName.value = load("filename", "default.json");
 
 const layout = load("layout", ["", "", ""]);
@@ -285,7 +285,7 @@ allInput.oninput = textInput.oninput;
 bloomInput.oninput = textInput.oninput;
 
 backgroundInput.oninput = () => {
-	scores.style.background = backgroundInput.checked ? "" : "none";
+	container.style.background = backgroundInput.checked ? "" : "none";
 };
 backgroundInput.oninput();
 
@@ -310,7 +310,7 @@ fileInput.onchange = () => {
 
 // Drag and drop
 document.body.addEventListener("dragover", (e) => {
-	if (e.target !== fileInput && e.target !== text) {
+	if (e.target !== fileInput && e.target !== textInput) {
 		e.preventDefault();
 	}
 });
@@ -351,7 +351,7 @@ textInput.addEventListener("click", (e) => {
 					"#" +
 					[match[1], match[2], match[3]]
 						.map((value) => {
-							value = Math.round(value * 255).toString(16);
+							value = Math.round(Number(value) * 255).toString(16);
 							return value.length < 2 ? "0" + value : value;
 						})
 						.join("");

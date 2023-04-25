@@ -93,22 +93,22 @@ body {
 	align-items: center;
 }
 
-#file {
+#fileInput {
 	width: 7em;
 }
 
-#file::file-selector-button {
+#fileInput::file-selector-button {
 	width: 100%;
 }
 
-#filename {
+#filenameInput {
 	flex-grow: 1;
 	width: 4em;
 	padding: 0 0.5em;
 	border: none;
 }
 
-#text {
+#textInput {
 	flex-grow: 1;
 	width: 100%;
 	min-width: 16em;
@@ -119,7 +119,7 @@ body {
 	resize: none;
 }
 
-#text.error {
+#textInput.error {
 	border-color: red;
 	outline: solid thin red;
 }
@@ -176,7 +176,7 @@ code {
 	font-size: 125%;
 }
 
-#color {
+#colorInput {
 	position: fixed;
 	width: 20px;
 	height: 20px;
@@ -184,23 +184,23 @@ code {
 	border: none;
 }
 
-#color:hover {
+#colorInput:hover {
 	--border-color: var(--text-color);
 }
 
-#color::-webkit-color-swatch-wrapper {
+#colorInput::-webkit-color-swatch-wrapper {
 	padding: 0;
 }
 
-#color::-webkit-color-swatch {
+#colorInput::-webkit-color-swatch {
 	border: 1px solid var(--border-color);
 }
 
-#color::-moz-color-swatch {
+#colorInput::-moz-color-swatch {
 	border: 1px solid var(--border-color);
 }
 
-#color:not(.active) {
+#colorInput:not(.active) {
 	display: none;
 }
 
