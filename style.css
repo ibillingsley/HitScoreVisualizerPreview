@@ -1,0 +1,224 @@
+@font-face {
+	font-family: "Teko";
+	font-style: normal;
+	font-weight: 600;
+	src: url("fonts/teko-600.woff2") format("woff2");
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	height: 100vh;
+	display: flex;
+	overflow: hidden;
+	font-family: sans-serif;
+	background: var(--bg-color);
+	--bg-color: black;
+	--text-color: white;
+	--border-color: #777;
+}
+
+#left,
+#right {
+	display: flex;
+	flex-direction: column;
+	min-width: 100px;
+	overflow: auto;
+}
+
+#left {
+	width: 60vw;
+	resize: horizontal;
+}
+
+.layout2 #left {
+	order: 1;
+	width: auto;
+	flex: 1 1 100px;
+	resize: none;
+}
+
+.layout2 #right {
+	width: 40vw;
+	flex: 0 0 auto;
+	resize: horizontal;
+}
+
+#scores {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+	flex: 1 1 auto;
+	background: black url(images/glass-desert-env.jpg) center;
+	background-size: cover;
+	color: white;
+	font-family: "Teko", sans-serif;
+	font-weight: 600;
+	font-size: 150%;
+	text-align: center;
+	overflow: auto;
+}
+
+.score {
+	position: relative;
+	margin: 0.75em;
+}
+
+.bloom {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	mix-blend-mode: screen;
+	text-shadow: 0 0 2px white;
+}
+
+.sidebar {
+	flex: 1 1 100px;
+	display: flex;
+	flex-direction: column;
+	background: var(--bg-color);
+	color: var(--text-color);
+}
+
+.toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+#file {
+	width: 7em;
+}
+
+#file::file-selector-button {
+	width: 100%;
+}
+
+#filename {
+	flex-grow: 1;
+	width: 4em;
+	padding: 0 0.5em;
+	border: none;
+}
+
+#text {
+	flex-grow: 1;
+	width: 100%;
+	min-width: 16em;
+	min-height: 10em;
+	background: inherit;
+	color: inherit;
+	font-family: monospace;
+	resize: none;
+}
+
+#text.error {
+	border-color: red;
+	outline: solid thin red;
+}
+
+#errorMessage {
+	padding: 0 0.5em;
+	background-color: darkred;
+	font-family: monospace;
+}
+
+input[type="text"],
+input[type="number"] {
+	background: var(--bg-color);
+	color: var(--text-color);
+	font-family: monospace;
+}
+
+label {
+	margin-left: 1em;
+	user-select: none;
+}
+
+#help {
+	width: 100%;
+	font-size: 80%;
+}
+
+#help td:first-child {
+	padding: 0 1em;
+	font-family: monospace;
+	font-size: 125%;
+	white-space: nowrap;
+}
+
+#help td:nth-child(3) {
+	width: 5em;
+}
+
+#help input {
+	width: 5em;
+	border: none;
+}
+
+textarea,
+table,
+td,
+th {
+	border: solid 1px #666;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+code {
+	font-size: 125%;
+}
+
+#color {
+	position: fixed;
+	width: 20px;
+	height: 20px;
+	padding: 0;
+	border: none;
+}
+
+#color:hover {
+	--border-color: var(--text-color);
+}
+
+#color::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+
+#color::-webkit-color-swatch {
+	border: 1px solid var(--border-color);
+}
+
+#color::-moz-color-swatch {
+	border: 1px solid var(--border-color);
+}
+
+#color:not(.active) {
+	display: none;
+}
+
+.footer {
+	font-size: 80%;
+	padding: 0.25em 0.5em;
+}
+
+.footer > * {
+	margin: 0 0.5em;
+	color: #ccc;
+	text-decoration: none;
+}
+
+.layout2 .footer {
+	flex-direction: row-reverse;
+}
+
+.spacer {
+	flex: 1 1 0;
+}
