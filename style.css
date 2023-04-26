@@ -122,12 +122,13 @@ body {
 	align-items: center;
 }
 
-#fileInput {
-	width: 7em;
+#loadInput {
+	width: 4em;
 }
 
-#fileInput::file-selector-button {
-	width: 100%;
+#loadInput option[value=""],
+#fileInput {
+	display: none;
 }
 
 #filenameInput {
@@ -145,6 +146,7 @@ body {
 	background: inherit;
 	color: inherit;
 	font-family: monospace;
+	outline: none;
 	resize: none;
 }
 

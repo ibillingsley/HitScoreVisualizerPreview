@@ -1,0 +1,40 @@
+{
+  "majorVersion": 3,
+  "minorVersion": 3,
+  "patchVersion": 3,
+  "isDefaultConfig": false,
+  "displayMode": "numeric",
+  "doIntermediateUpdates": true,
+  "judgments": [
+    {
+      "threshold": 115,
+      "color": [0.0, 0.4, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 112,
+      "color": [0.0, 0.65, 1.0, 0.9],
+      "fade": true
+    },
+    {
+      "threshold": 106,
+      "color": [1.0, 1.0, 1.0, 0.8],
+      "fade": true
+    },
+    {
+      "threshold": 100,
+      "color": [1.0, 1.0, 0.0, 0.7],
+      "fade": true
+    },
+    {
+      "threshold": 90,
+      "color": [1.0, 0.5, 0.0, 0.6],
+      "fade": true
+    },
+    {
+      "threshold": 0,
+      "color": [1.0, 0.0, 0.0, 0.5],
+      "fade": true
+    }
+  ]
+}

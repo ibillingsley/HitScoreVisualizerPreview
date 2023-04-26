@@ -1,0 +1,78 @@
+{
+  "majorVersion": 3,
+  "minorVersion": 3,
+  "patchVersion": 3,
+  "isDefaultConfig": false,
+  "displayMode": "format",
+  "doIntermediateUpdates": true,
+  "timeDependencyDecimalPrecision": 1,
+  "timeDependencyDecimalOffset": 2,
+  "judgments": [
+    {
+      "threshold": 115,
+      "text": "<size=115%>%s</size>",
+      "color": [1.0, 1.0, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 113,
+      "text": "<size=115%>%s</size>",
+      "color": [0.6, 0.0, 1.0, 1.0],
+      "fade": true
+    },
+    {
+      "threshold": 110,
+      "text": "<size=115%>%s</size>",
+      "color": [0.0, 0.6, 1.0, 1.0],
+      "fade": true
+    },
+    {
+      "threshold": 106,
+      "text": "<size=115%>%s</size>",
+      "color": [0.0, 1.0, 0.0, 1.0],
+      "fade": true
+    },
+    {
+      "threshold": 100,
+      "text": "<size=115%>%s</size>",
+      "color": [1.0, 1.0, 0.0, 1.0],
+      "fade": true
+    },
+    {
+      "threshold": 0,
+      "text": "<size=115%>%s</size>",
+      "color": [1.0, 0.0, 0.2, 1.0],
+      "fade": true
+    }
+  ],
+  "beforeCutAngleJudgments": [
+    {
+      "threshold": 70,
+      "text": "["
+    },
+    {
+      "threshold": 0,
+      "text": " "
+    }
+  ],
+  "accuracyJudgments": [
+    {
+      "threshold": 15,
+      "text": "+"
+    },
+    {
+      "threshold": 0,
+      "text": " "
+    }
+  ],
+  "afterCutAngleJudgments": [
+    {
+      "threshold": 30,
+      "text": "]"
+    },
+    {
+      "threshold": 0,
+      "text": " "
+    }
+  ]
+}

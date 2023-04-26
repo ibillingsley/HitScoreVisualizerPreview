@@ -86,6 +86,7 @@ const editorColumn = document.getElementById("editorColumn");
 const textInput = document.getElementById("textInput");
 const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("filenameInput");
+const loadInput = document.getElementById("loadInput");
 const errorMessage = document.getElementById("errorMessage");
 const download = document.getElementById("download");
 const bloomInput = document.getElementById("bloomInput");
@@ -104,6 +105,7 @@ const cRangeInput = document.getElementById("cRangeInput");
 const aRangeInput = document.getElementById("aRangeInput");
 const colorInput = document.getElementById("colorInput");
 const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|color=(#[\dA-F]{6})/gi;
+let modified = false;
 
 function render(json) {
 	const displayMode = json.displayMode || (json.majorVersion ? "default" : "format");
@@ -324,12 +326,29 @@ helpInput.oninput = () => {
 };
 helpInput.oninput();
 
+// Presets
+loadInput.onchange = async () => {
+	const value = loadInput.value;
+	loadInput.value = "";
+	if (value === "file") {
+		fileInput.click();
+	} else if (value) {
+		if (modified && !confirm(`Unsaved changes \n\nLoad ${value}?`)) return;
+		const response = await fetch("configs/" + value);
+		textInput.value = await response.text();
+		fileName.value = value;
+		textInput.oninput();
+		modified = false;
+	}
+};
+
 // File input
 async function setFile(file) {
 	const text = await file.text();
 	textInput.value = text;
 	textInput.oninput();
 	fileName.value = file.name;
+	modified = false;
 	hideColorPicker();
 }
 
@@ -408,6 +427,7 @@ textInput.addEventListener("click", (e) => {
 				textInput.value =
 					match.input.substring(0, match.index) + value + match.input.substring(match.index + match[0].length);
 				textInput.oninput();
+				modified = true;
 			};
 			return;
 		}
@@ -420,7 +440,11 @@ function hideColorPicker() {
 	colorInput.oninput = null;
 }
 
-textInput.addEventListener("input", hideColorPicker);
+textInput.addEventListener("input", () => {
+	modified = true;
+	hideColorPicker();
+});
+
 document.body.addEventListener("click", (e) => {
 	if (e.target !== textInput && e.target !== colorInput) {
 		hideColorPicker();

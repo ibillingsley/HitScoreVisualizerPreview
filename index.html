@@ -28,9 +28,21 @@
 	</div>
 	<div id="editorColumn">
 		<div class="toolbar">
+			<select id="loadInput">
+				<option value="">Load</option>
+				<optgroup label="Presets">
+					<option value="default.json">default.json</option>
+					<option value="HitScoreVisualizerConfig (default).json">HitScoreVisualizerConfig (default).json</option>
+					<option value="forked_ice_fire_HSV.json">forked_ice_fire_HSV.json</option>
+					<option value="forked_ice_fire_compact_HSV.json">forked_ice_fire_compact_HSV.json</option>
+				</optgroup>
+				<optgroup label="Local File">
+					<option value="file">Browse...</option>
+				</optgroup>
+			</select>
 			<input id="fileInput" type="file" accept=".json">
 			<input id="filenameInput" type="text">
-			<button id="download">Download</button>
+			<button id="download">Save</button>
 		</div>
 		<textarea id="textInput" spellcheck="false"></textarea>
 		<div id="errorMessage"></div>
