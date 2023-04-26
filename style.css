@@ -54,8 +54,8 @@ body {
 }
 
 #preview {
-	flex: 0 0 auto;
-	min-height: 9.5em;
+	flex: 0 0.8 9.5em;
+	overflow: visible;
 }
 
 #previewToolbar {
