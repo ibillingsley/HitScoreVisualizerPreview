@@ -8,38 +8,38 @@ const defaultConfig = `{
   "judgments": [
     {
       "threshold": 115,
-      "text": "<size=115%>%s</size>",
+      "text": "<size=110%>%s</size>",
       "color": [1.0, 1.0, 1.0, 1.0],
       "fade": false
     },
     {
       "threshold": 113,
-      "text": "<size=115%>%s</size>",
-      "color": [0.6, 0.0, 1.0, 1.0],
+      "text": "<size=110%>%s</size>",
+      "color": [0.52, 0.0, 1.0, 1.0],
       "fade": false
     },
     {
       "threshold": 110,
-      "text": "<size=115%>%s</size>",
-      "color": [0.0, 0.6, 1.0, 1.0],
+      "text": "<size=110%>%s</size>",
+      "color": [0.0, 0.64, 1.0, 1.0],
       "fade": false
     },
     {
       "threshold": 106,
-      "text": "<size=115%>%s</size>",
+      "text": "<size=110%>%s</size>",
       "color": [0.0, 1.0, 0.0, 1.0],
       "fade": false
     },
     {
       "threshold": 100,
-      "text": "<size=115%>%s</size>",
+      "text": "<size=110%>%s</size>",
       "color": [1.0, 1.0, 0.0, 1.0],
       "fade": false
     },
     {
       "threshold": 0,
-      "text": "<size=115%>%s</size>",
-      "color": [1.0, 0.0, 0.2, 1.0],
+      "text": "<size=110%>%s</size>",
+      "color": [1.0, 0.0, 0.22, 1.0],
       "fade": false
     }
   ]
