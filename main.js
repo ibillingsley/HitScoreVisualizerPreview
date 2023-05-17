@@ -226,11 +226,11 @@ textInput.oninput = () => {
 		json = JSON.parse(textInput.value);
 	} catch (e) {
 		try {
+			console.warn(e);
 			// Remove trailing commas
 			json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, "$1"));
 		} catch (e) {
 			// Show parse error
-			console.warn(e);
 			let message = e.message || "";
 			const match = message.match(/position ([\d]+)$/);
 			if (match && match[1]) {
