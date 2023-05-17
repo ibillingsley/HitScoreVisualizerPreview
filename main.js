@@ -225,20 +225,19 @@ textInput.oninput = () => {
 	try {
 		json = JSON.parse(textInput.value);
 	} catch (e) {
+		console.warn(e);
+		// Show parse error
+		let message = e.message || "";
+		const match = message.match(/position ([\d]+)$/);
+		if (match && match[1]) {
+			const line = textInput.value.substring(0, match[1]).split("\n").length;
+			message += ` (line ${line})`;
+		}
+		errorMessage.textContent = message;
 		try {
-			console.warn(e);
 			// Remove trailing commas
 			json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, "$1"));
-		} catch (e) {
-			// Show parse error
-			let message = e.message || "";
-			const match = message.match(/position ([\d]+)$/);
-			if (match && match[1]) {
-				const line = textInput.value.substring(0, match[1]).split("\n").length;
-				message += ` (line ${line})`;
-			}
-			errorMessage.textContent = message;
-		}
+		} catch (e) {}
 	}
 	if (json && json.judgments) {
 		render(json);
