@@ -299,15 +299,15 @@ helpInput.oninput();
 
 // Presets
 loadInput.onchange = async () => {
-	const value = loadInput.value;
+	const preset = loadInput.value;
 	loadInput.value = "";
-	if (value === "file") {
+	if (preset === "file") {
 		fileInput.click();
-	} else if (value) {
-		if (modified && !confirm(`Unsaved changes \n\nLoad ${value}?`)) return;
-		const response = await fetch("configs/" + value);
+	} else if (preset) {
+		if (modified && !confirm(`Unsaved changes \n\nLoad ${preset}?`)) return;
+		const response = await fetch("configs/" + preset);
 		textInput.value = await response.text();
-		fileName.value = value;
+		fileName.value = preset;
 		parseAndRender();
 		modified = false;
 	}
@@ -347,7 +347,13 @@ document.body.addEventListener("drop", (e) => {
 formatButton.onclick = function () {
 	const json = parseAndRender();
 	if (json) {
-		textInput.value = JSON.stringify(json, null, 2);
+		const text = JSON.stringify(json, null, 2).replace(colorRegex, (match) =>
+			match.replace(/\n\s*/g, "").replaceAll(",", ", ")
+		);
+		textInput.focus();
+		textInput.select();
+		// Preserves undo history
+		if (!document.execCommand("insertText", false, text)) textInput.value = text;
 		parseAndRender();
 	}
 };
