@@ -56,7 +56,8 @@ const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("filenameInput");
 const loadInput = document.getElementById("loadInput");
 const errorMessage = document.getElementById("errorMessage");
-const download = document.getElementById("download");
+const formatButton = document.getElementById("format");
+const downloadButton = document.getElementById("download");
 const bloomInput = document.getElementById("bloomInput");
 const help = document.getElementById("help");
 const helpInput = document.getElementById("helpInput");
@@ -104,7 +105,7 @@ function renderScore(displayMode, judgment, tokens) {
 	score.className = "score";
 	switch (displayMode) {
 		case "format":
-			score.innerHTML = rich(format(text, tokens));
+			score.innerHTML = rich(replaceTokens(text, tokens));
 			break;
 		case "numeric":
 			score.textContent = tokens.s;
@@ -147,7 +148,7 @@ function rich(text) {
 	return text;
 }
 
-function format(text, tokens) {
+function replaceTokens(text, tokens) {
 	for (const token in tokens) {
 		text = text.replaceAll("%" + token, tokens[token]);
 	}
@@ -218,7 +219,7 @@ window.onbeforeunload = () => {
 };
 
 // Text input
-textInput.oninput = () => {
+function parseAndRender() {
 	textInput.classList.add("error");
 	errorMessage.textContent = "";
 	let json = null;
@@ -243,8 +244,11 @@ textInput.oninput = () => {
 		render(json);
 		textInput.classList.remove("error");
 	}
-};
-textInput.oninput();
+	return json;
+}
+
+textInput.oninput = parseAndRender;
+parseAndRender();
 
 // Token inputs
 function onTokenInput() {
@@ -255,7 +259,7 @@ function onTokenInput() {
 	bRangeInput.value = bInput.value;
 	cRangeInput.value = cInput.value;
 	aRangeInput.value = aInput.value;
-	textInput.oninput();
+	parseAndRender();
 }
 
 bInput.oninput = onTokenInput;
@@ -304,7 +308,7 @@ loadInput.onchange = async () => {
 		const response = await fetch("configs/" + value);
 		textInput.value = await response.text();
 		fileName.value = value;
-		textInput.oninput();
+		parseAndRender();
 		modified = false;
 	}
 };
@@ -313,7 +317,7 @@ loadInput.onchange = async () => {
 async function setFile(file) {
 	const text = await file.text();
 	textInput.value = text;
-	textInput.oninput();
+	parseAndRender();
 	fileName.value = file.name;
 	modified = false;
 	hideColorPicker();
@@ -339,8 +343,17 @@ document.body.addEventListener("drop", (e) => {
 	}
 });
 
+// Format
+formatButton.onclick = function () {
+	const json = parseAndRender();
+	if (json) {
+		textInput.value = JSON.stringify(json, null, 2);
+		parseAndRender();
+	}
+};
+
 // Download
-download.onclick = function () {
+downloadButton.onclick = function () {
 	const a = document.createElement("a");
 	const blob = new Blob([textInput.value], { type: "text/plain" });
 	const url = URL.createObjectURL(blob);
@@ -393,7 +406,7 @@ textInput.addEventListener("click", (e) => {
 				}
 				textInput.value =
 					match.input.substring(0, match.index) + value + match.input.substring(match.index + match[0].length);
-				textInput.oninput();
+				parseAndRender();
 				modified = true;
 			};
 			return;
