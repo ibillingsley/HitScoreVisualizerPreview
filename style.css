@@ -14,6 +14,7 @@ body {
 	height: 100vh;
 	display: flex;
 	overflow: hidden;
+	color-scheme: dark;
 	font-family: sans-serif;
 	background: var(--bg-color);
 	--bg-color: black;
@@ -119,7 +120,6 @@ body {
 .toolbar {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
 }
 
 #loadInput {
@@ -159,6 +159,10 @@ body {
 	padding: 0 0.5em;
 	background-color: darkred;
 	font-family: monospace;
+}
+
+button {
+	margin: 1px 1px 1px 0;
 }
 
 input[type="text"],
@@ -242,6 +246,7 @@ code {
 .footer {
 	font-size: 80%;
 	padding: 0.25em 0.5em;
+	align-items: center;
 }
 
 .footer > * {
