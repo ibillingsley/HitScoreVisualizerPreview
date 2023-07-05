@@ -143,6 +143,7 @@ function rich(text) {
 	text = text.replaceAll(/&lt;size=([^>]+)>/g, '<span style="font-size: $1">');
 	text = text.replaceAll(/&lt;\/size[^>]*>/g, "</span>");
 	text = text.replaceAll(/&lt;color=([^>]+)>/g, '<span style="color: $1">');
+	text = text.replaceAll(/&lt;(#[\dA-F]{3,8})>/gi, '<span style="color: $1">');
 	text = text.replaceAll(/&lt;\/color[^>]*>/g, "</span>");
 	text = text.replaceAll("\n", "<br>");
 	return text;
