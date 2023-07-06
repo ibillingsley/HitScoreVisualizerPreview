@@ -73,7 +73,7 @@ const bRangeInput = document.getElementById("bRangeInput");
 const cRangeInput = document.getElementById("cRangeInput");
 const aRangeInput = document.getElementById("aRangeInput");
 const colorInput = document.getElementById("colorInput");
-const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|color=(#[\dA-F]{6})/gi;
+const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|(color=)?(#[\dA-F]{6})/gi;
 let modified = false;
 
 function render(json) {
@@ -143,7 +143,7 @@ function rich(text) {
 	text = text.replaceAll(/&lt;size=([^>]+)>/g, '<span style="font-size: $1">');
 	text = text.replaceAll(/&lt;\/size[^>]*>/g, "</span>");
 	text = text.replaceAll(/&lt;color=([^>]+)>/g, '<span style="color: $1">');
-	text = text.replaceAll(/&lt;(#[\dA-F]{3,8})>/gi, '<span style="color: $1">');
+	text = text.replaceAll(/&lt;(#[\dA-F]{6,8})>/gi, '<span style="color: $1">');
 	text = text.replaceAll(/&lt;\/color[^>]*>/g, "</span>");
 	text = text.replaceAll("\n", "<br>");
 	return text;
@@ -380,8 +380,8 @@ textInput.addEventListener("click", (e) => {
 	for (const match of matches) {
 		if (cursor > match.index && cursor < match.index + match[0].length) {
 			// Cursor in color block, show picker
-			if (match[4]) {
-				colorInput.value = match[4];
+			if (match[5]) {
+				colorInput.value = match[5];
 			} else {
 				colorInput.value =
 					"#" +
@@ -398,8 +398,8 @@ textInput.addEventListener("click", (e) => {
 			colorInput.oninput = () => {
 				// Replace color
 				let value = match[0];
-				if (match[4]) {
-					value = "color=" + colorInput.value.toUpperCase();
+				if (match[5]) {
+					value = (match[4] || "") + colorInput.value.toUpperCase();
 				} else {
 					const hex = parseInt(colorInput.value.substring(1), 16);
 					const r = (((hex >> 16) & 255) / 255).toFixed(3).replace(/(\..+?)0+$/, "$1");
