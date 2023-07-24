@@ -56,6 +56,7 @@ const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("filenameInput");
 const loadInput = document.getElementById("loadInput");
 const errorMessage = document.getElementById("errorMessage");
+const lintButton = document.getElementById("lint");
 const formatButton = document.getElementById("format");
 const downloadButton = document.getElementById("download");
 const bloomInput = document.getElementById("bloomInput");
@@ -222,7 +223,8 @@ window.onbeforeunload = () => {
 // Text input
 function parseAndRender() {
 	textInput.classList.add("error");
-	errorMessage.textContent = "";
+	errorMessage.lastChild.textContent = "";
+	errorMessage.classList.add("hidden");
 	let json = null;
 	try {
 		json = JSON.parse(textInput.value);
@@ -235,7 +237,8 @@ function parseAndRender() {
 			const line = textInput.value.substring(0, match[1]).split("\n").length;
 			message += ` (line ${line})`;
 		}
-		errorMessage.textContent = message;
+		errorMessage.lastChild.textContent = message;
+		errorMessage.classList.remove("hidden");
 		try {
 			// Remove trailing commas
 			json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, "$1"));
@@ -250,6 +253,9 @@ function parseAndRender() {
 
 textInput.oninput = parseAndRender;
 parseAndRender();
+
+// Lint button
+lintButton.onclick = () => window.open("https://jsonlinter.net/?json=" + encodeURIComponent(textInput.value));
 
 // Token inputs
 function onTokenInput() {
@@ -281,8 +287,8 @@ aRangeInput.oninput = onRangeInput;
 
 // Checkbox inputs
 previewInput.oninput = () => {
-	preview.style.display = previewInput.checked ? "" : "none";
-	previewToolbar.style.display = previewInput.checked ? "" : "none";
+	preview.classList.toggle("hidden", !previewInput.checked);
+	previewToolbar.classList.toggle("hidden", !previewInput.checked);
 };
 previewInput.oninput();
 
@@ -294,7 +300,7 @@ backgroundInput.oninput = () => {
 backgroundInput.oninput();
 
 helpInput.oninput = () => {
-	help.style.display = helpInput.checked ? "" : "none";
+	help.classList.toggle("hidden", !helpInput.checked);
 };
 helpInput.oninput();
 

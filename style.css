@@ -156,7 +156,7 @@ body {
 }
 
 #errorMessage {
-	padding: 0 0.5em;
+	padding: 0.25em;
 	background-color: darkred;
 	font-family: monospace;
 }
@@ -260,4 +260,8 @@ code {
 
 .spacer {
 	flex: 1 1 0;
+}
+
+.hidden {
+	display: none;
 }
