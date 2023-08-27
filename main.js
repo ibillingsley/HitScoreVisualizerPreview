@@ -64,6 +64,7 @@ const help = document.getElementById("help");
 const helpInput = document.getElementById("helpInput");
 const backgroundInput = document.getElementById("backgroundInput");
 const previewInput = document.getElementById("previewInput");
+const chainInput = document.getElementById("chainInput");
 const sInput = document.getElementById("sInput");
 const pInput = document.getElementById("pInput");
 const bInput = document.getElementById("bInput");
@@ -77,26 +78,32 @@ const colorInput = document.getElementById("colorInput");
 const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|(color=)?(#[\dA-F]{6})/gi;
 let modified = false;
 
-function render(json) {
+function render(json, chain) {
 	const displayMode = json.displayMode || (json.majorVersion ? "default" : "format");
-	const tokens = getTokens(json);
+	const judgments = chain ? json.chainHeadJudgments : json.judgments;
+	const tokens = getTokens(json, chain);
 	preview.innerHTML = "";
 	previewAll.innerHTML = "";
 	// Render single score
-	let index = json.judgments.findIndex((j) => (j.threshold || 0) <= tokens.s);
-	if (index < 0) index = json.judgments.length - 1;
-	const judgment = Object.assign({}, json.judgments[index]);
+	let index = judgments.findIndex((j) => (j.threshold || 0) <= tokens.s);
+	if (index < 0) index = judgments.length - 1;
+	const judgment = Object.assign({}, judgments[index]);
 	if (judgment.fade && index > 0) {
-		const previous = json.judgments[index - 1];
+		const previous = judgments[index - 1];
 		const ratio = (tokens.s - (judgment.threshold || 0)) / (previous.threshold - (judgment.threshold || 0));
 		judgment.color = judgment.color.map((v, i) => v * (1 - ratio) + previous.color[i] * ratio);
 	}
 	preview.appendChild(renderScore(displayMode, judgment, tokens));
 	// Render all threshold scores
-	for (const judgment of json.judgments) {
+	for (const judgment of judgments) {
 		tokens.s = judgment.threshold || 0;
-		tokens.p = Math.floor(tokens.s / 1.15);
+		tokens.p = Math.floor(tokens.s / (chain ? 0.85 : 1.15));
 		previewAll.appendChild(renderScore(displayMode, judgment, tokens));
+	}
+	if (chain && json.chainLinkDisplay) {
+		tokens.s = 20;
+		tokens.p = 100;
+		previewAll.appendChild(renderScore(displayMode, json.chainLinkDisplay, tokens));
 	}
 }
 
@@ -157,13 +164,13 @@ function replaceTokens(text, tokens) {
 	return text;
 }
 
-function getTokens(json) {
+function getTokens(json, chain) {
 	const b = Number(bInput.value);
 	const c = Number(cInput.value);
-	const a = Number(aInput.value);
+	const a = chain ? 0 : Number(aInput.value);
 	const t = Number(tInput.value);
-	const s = Number(sInput.value);
-	const p = Number(pInput.value);
+	const s = b + c + a;
+	const p = Math.floor(s / (chain ? 0.85 : 1.15));
 	return {
 		s: s,
 		p: p,
@@ -245,7 +252,9 @@ function parseAndRender() {
 		} catch (e) {}
 	}
 	if (json && json.judgments) {
-		render(json);
+		const chain = json.chainHeadJudgments && chainInput.checked;
+		chainInput.parentElement.classList.toggle("hidden", !json.chainHeadJudgments);
+		render(json, chain);
 		textInput.classList.remove("error");
 	}
 	return json;
@@ -292,7 +301,8 @@ previewInput.oninput = () => {
 };
 previewInput.oninput();
 
-bloomInput.oninput = textInput.oninput;
+chainInput.oninput = parseAndRender;
+bloomInput.oninput = parseAndRender;
 
 backgroundInput.oninput = () => {
 	previewAll.style.background = backgroundInput.checked ? "" : "none";
