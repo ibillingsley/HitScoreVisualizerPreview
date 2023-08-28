@@ -254,6 +254,8 @@ function parseAndRender() {
 	if (json && json.judgments) {
 		const chain = json.chainHeadJudgments && chainInput.checked;
 		chainInput.parentElement.classList.toggle("hidden", !json.chainHeadJudgments);
+		aInput.disabled = aRangeInput.disabled = chain;
+
 		render(json, chain);
 		textInput.classList.remove("error");
 	}
