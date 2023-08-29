@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/cdn.discordapp.com/*"
+  to = "https://cdn.discordapp.com/:splat"
+  status = 200

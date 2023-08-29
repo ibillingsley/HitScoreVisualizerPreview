@@ -204,6 +204,28 @@ function load(key, defaultValue) {
 	return defaultValue;
 }
 
+// Load from URL
+async function fetchConfig(url) {
+	try {
+		url = new URL(url, location.href);
+		// CORS proxy, see netlify.toml
+		if (url.hostname === "cdn.discordapp.com") {
+			url = new URL("/" + url.hostname + url.pathname, location.href);
+		}
+		const response = await fetch(url);
+		textInput.value = await response.text();
+		fileName.value = decodeURIComponent(url.pathname.replace(/.*\//, ""));
+		parseAndRender();
+		modified = false;
+		return true;
+	} catch (e) {
+		console.error(e);
+		alert(e.message + " " + url);
+	}
+}
+const params = new URLSearchParams(location.search);
+if (params.get("url")) fetchConfig(params.get("url"));
+
 // Persist UI state
 if (!textInput.value) textInput.value = load("text", defaultConfig);
 if (!fileName.value) fileName.value = load("filename", "default.json");
@@ -322,13 +344,14 @@ loadInput.onchange = async () => {
 	loadInput.value = "";
 	if (preset === "file") {
 		fileInput.click();
+	} else if (preset === "url") {
+		const url = prompt("Enter URL to .json file");
+		if (url && (await fetchConfig(url))) {
+			history.pushState({}, "", "?url=" + url.replaceAll("&", "%26"));
+		}
 	} else if (preset) {
 		if (modified && !confirm(`Unsaved changes \n\nLoad ${preset}?`)) return;
-		const response = await fetch("configs/" + preset);
-		textInput.value = await response.text();
-		fileName.value = preset;
-		parseAndRender();
-		modified = false;
+		fetchConfig("configs/" + preset);
 	}
 };
 
