@@ -288,7 +288,8 @@ textInput.oninput = parseAndRender;
 parseAndRender();
 
 // Lint button
-lintButton.onclick = () => window.open("https://jsonlinter.net/?json=" + encodeURIComponent(textInput.value));
+lintButton.onclick = () =>
+	window.open("https://jsonformatter.curiousconcept.com/?process=true&data=" + encodeURIComponent(textInput.value));
 
 // Token inputs
 function onTokenInput() {
