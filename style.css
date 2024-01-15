@@ -155,10 +155,14 @@ body {
 	outline: solid thin red;
 }
 
-#errorMessage {
+#error {
 	padding: 0.25em;
 	background-color: darkred;
 	font-family: monospace;
+}
+
+#errorMessage {
+	cursor: pointer;
 }
 
 button {
@@ -202,6 +206,16 @@ label {
 	border: none;
 }
 
+#help code {
+	font-size: 125%;
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
 textarea,
 table,
 td,
@@ -209,10 +223,6 @@ th {
 	border: solid 1px #666;
 	border-spacing: 0;
 	border-collapse: collapse;
-}
-
-code {
-	font-size: 125%;
 }
 
 #colorInput {

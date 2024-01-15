@@ -55,6 +55,7 @@ const textInput = document.getElementById("textInput");
 const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("filenameInput");
 const loadInput = document.getElementById("loadInput");
+const errorContainer = document.getElementById("error");
 const errorMessage = document.getElementById("errorMessage");
 const lintButton = document.getElementById("lint");
 const formatButton = document.getElementById("format");
@@ -252,22 +253,16 @@ window.onbeforeunload = () => {
 // Text input
 function parseAndRender() {
 	textInput.classList.add("error");
-	errorMessage.lastChild.textContent = "";
-	errorMessage.classList.add("hidden");
+	errorContainer.classList.add("hidden");
+	errorMessage.textContent = "";
 	let json = null;
 	try {
 		json = JSON.parse(textInput.value);
 	} catch (e) {
 		console.warn(e);
 		// Show parse error
-		let message = e.message || "";
-		const match = message.match(/position ([\d]+)$/);
-		if (match && match[1]) {
-			const line = textInput.value.substring(0, match[1]).split("\n").length;
-			message += ` (line ${line})`;
-		}
-		errorMessage.lastChild.textContent = message;
-		errorMessage.classList.remove("hidden");
+		errorMessage.textContent = e.message || "";
+		errorContainer.classList.remove("hidden");
 		try {
 			// Remove trailing commas
 			json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, "$1"));
@@ -287,9 +282,20 @@ function parseAndRender() {
 textInput.oninput = parseAndRender;
 parseAndRender();
 
-// Lint button
-lintButton.onclick = () =>
-	window.open("https://jsonformatter.curiousconcept.com/?process=true&data=" + encodeURIComponent(textInput.value));
+// Error location
+errorMessage.onclick = () => {
+	const match = errorMessage.textContent.match(/(?:position ([\d]+).*?)?(?:line ([\d]+).*?)?(?:column ([\d]+))/);
+	if (match) {
+		let [position, line, column] = match.slice(1).map((m) => Number(m));
+		if (!position) {
+			position = textInput.value.split("\n").reduce((t, v, i) => (i < line - 1 ? v.length + 1 + t : t), 0) + column;
+		}
+		if (position) {
+			textInput.setSelectionRange(position - 1, position - 1);
+			textInput.focus();
+		}
+	}
+};
 
 // Token inputs
 function onTokenInput() {
