@@ -284,16 +284,18 @@ parseAndRender();
 
 // Error location
 errorMessage.onclick = () => {
-	const match = errorMessage.textContent.match(/(?:position ([\d]+).*?)?(?:line ([\d]+).*?)?(?:column ([\d]+))/);
-	if (match) {
-		let [position, line, column] = match.slice(1).map((m) => Number(m));
-		if (!position) {
-			position = textInput.value.split("\n").reduce((t, v, i) => (i < line - 1 ? v.length + 1 + t : t), 0) + column;
-		}
-		if (position) {
-			textInput.setSelectionRange(position - 1, position - 1);
-			textInput.focus();
-		}
+	const match = errorMessage.textContent.match(/position (\d+)|line (\d+) column (\d+)/);
+	if (!match) return;
+	let [position, line, column] = match.slice(1).map((m) => Number(m));
+	if (!position) {
+		position = textInput.value
+			.split("\n")
+			.slice(0, line - 1)
+			.reduce((t, v) => v.length + 1 + t, column - 1);
+	}
+	if (position) {
+		textInput.setSelectionRange(position, position);
+		textInput.focus();
 	}
 };
 
@@ -425,50 +427,50 @@ downloadButton.onclick = function () {
 textInput.addEventListener("click", (e) => {
 	const cursor = textInput.selectionDirection === "forward" ? textInput.selectionEnd : textInput.selectionStart;
 	const matches = textInput.value.matchAll(colorRegex);
-	for (const match of matches) {
-		if (cursor > match.index && cursor < match.index + match[0].length) {
-			// Cursor in color block, show picker
-			if (match[5]) {
-				colorInput.value = match[5];
-			} else {
-				colorInput.value =
-					"#" +
-					[match[1], match[2], match[3]]
-						.map((value) => {
-							value = Math.round(Number(value) * 255).toString(16);
-							return value.length < 2 ? "0" + value : value;
-						})
-						.join("");
+	const match = Array.from(matches).find((m) => cursor > m.index && cursor < m.index + m[0].length);
+	if (!match) return hideColorPicker();
+	// Cursor in color block, show picker
+	const [text, r, g, b, prefix, hex] = match;
+	colorInput.value = hex ?? "#" + rgbToHex(r, g, b);
+	colorInput.style.left = e.clientX + 50 + "px";
+	colorInput.style.top = e.clientY - 10 + "px";
+	colorInput.classList.add("active");
+	colorInput.oninput = () => {
+		// Replace color
+		let value = text;
+		if (hex) {
+			value = (prefix || "") + colorInput.value.toUpperCase();
+		} else {
+			const rgb = hexToRgb(colorInput.value.substring(1));
+			const split = text.split(",");
+			for (let i = 0; i < 3; i++) {
+				split[i] = split[i].replace(/[\d.]+/, rgb[i].toFixed(3).replace(/(\..+?)0+$/, "$1"));
 			}
-			colorInput.style.left = e.clientX + 50 + "px";
-			colorInput.style.top = e.clientY - 10 + "px";
-			colorInput.classList.add("active");
-			colorInput.oninput = () => {
-				// Replace color
-				let value = match[0];
-				if (match[5]) {
-					value = (match[4] || "") + colorInput.value.toUpperCase();
-				} else {
-					const hex = parseInt(colorInput.value.substring(1), 16);
-					const r = (((hex >> 16) & 255) / 255).toFixed(3).replace(/(\..+?)0+$/, "$1");
-					const g = (((hex >> 8) & 255) / 255).toFixed(3).replace(/(\..+?)0+$/, "$1");
-					const b = ((hex & 255) / 255).toFixed(3).replace(/(\..+?)0+$/, "$1");
-					const split = match[0].split(",");
-					split[0] = split[0].replace(/[\d.]+/, r);
-					split[1] = split[1].replace(/[\d.]+/, g);
-					split[2] = split[2].replace(/[\d.]+/, b);
-					value = split.join(",");
-				}
-				textInput.value =
-					match.input.substring(0, match.index) + value + match.input.substring(match.index + match[0].length);
-				parseAndRender();
-				modified = true;
-			};
-			return;
+			value = split.join(",");
 		}
-	}
-	hideColorPicker();
+		textInput.value = match.input.substring(0, match.index) + value + match.input.substring(match.index + text.length);
+		parseAndRender();
+		modified = true;
+	};
 });
+
+function rgbToHex(r, g, b) {
+	return [r, g, b]
+		.map((v) =>
+			Math.round(Number(v) * 255)
+				.toString(16)
+				.padStart(2, "0")
+		)
+		.join("");
+}
+
+function hexToRgb(hex) {
+	hex = parseInt(hex, 16);
+	const r = ((hex >> 16) & 255) / 255;
+	const g = ((hex >> 8) & 255) / 255;
+	const b = (hex & 255) / 255;
+	return [r, g, b];
+}
 
 function hideColorPicker() {
 	colorInput.classList.remove("active");
