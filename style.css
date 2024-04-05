@@ -1,8 +1,8 @@
 @font-face {
 	font-family: "Teko";
 	font-style: normal;
-	font-weight: 600;
-	src: url("fonts/teko-600.woff2") format("woff2");
+	font-weight: 500;
+	src: url("fonts/teko-500.woff2") format("woff2");
 }
 
 * {
@@ -89,7 +89,7 @@ body {
 	flex: 1 1 auto;
 	color: white;
 	font-family: "Teko", sans-serif;
-	font-weight: 600;
+	font-weight: 500;
 	font-size: 150%;
 	font-style: italic;
 	text-align: center;
