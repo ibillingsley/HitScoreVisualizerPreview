@@ -211,7 +211,7 @@ async function fetchConfig(url) {
 		url = new URL(url, location.href);
 		// CORS proxy, see netlify.toml
 		if (url.hostname === "cdn.discordapp.com") {
-			url = new URL("/" + url.hostname + url.pathname, location.href);
+			url = new URL("/" + url.hostname + url.pathname + url.search, location.href);
 		}
 		const response = await fetch(url);
 		textInput.value = await response.text();
