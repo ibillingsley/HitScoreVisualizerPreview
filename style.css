@@ -107,7 +107,7 @@ body {
 	left: 0;
 	margin: 0;
 	mix-blend-mode: screen;
-	text-shadow: 0 0 2px white;
+	filter: drop-shadow(0 0 1px #fffe) blur(7px);
 }
 
 #editorColumn {

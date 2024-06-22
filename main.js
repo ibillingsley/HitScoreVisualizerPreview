@@ -76,7 +76,8 @@ const bRangeInput = document.getElementById("bRangeInput");
 const cRangeInput = document.getElementById("cRangeInput");
 const aRangeInput = document.getElementById("aRangeInput");
 const colorInput = document.getElementById("colorInput");
-const colorRegex = /"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*[\d.]+\s*\]|(color=)?(#[\dA-F]{6})/gi;
+const colorRegex =
+	/"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*(?:,\s*[\d.]+\s*)?\]|(color=)?(#[\dA-F]{6})/gi;
 let modified = false;
 
 function render(json, chain) {
@@ -141,7 +142,7 @@ function renderScore(displayMode, judgment, tokens) {
 	if (bloomInput.checked) {
 		const bloom = score.cloneNode(true);
 		bloom.className = "bloom";
-		bloom.style.filter = `blur(7px) opacity(${color[3]})`;
+		bloom.style.opacity = color[3] ?? 1;
 		score.appendChild(bloom);
 	}
 	return score;
@@ -151,8 +152,7 @@ function rich(text) {
 	text = text.replaceAll("<", "&lt;");
 	text = text.replaceAll(/&lt;size=([^>]+)>/g, '<span style="font-size: $1">');
 	text = text.replaceAll(/&lt;\/size[^>]*>/g, "</span>");
-	text = text.replaceAll(/&lt;color=([^>]+)>/g, '<span style="color: $1">');
-	text = text.replaceAll(/&lt;(#[\dA-F]{6,8})>/gi, '<span style="color: $1">');
+	text = text.replaceAll(/&lt;(?:color=)?(#[\dA-F]{6})[^>]*>/gi, '<span style="color: $1">');
 	text = text.replaceAll(/&lt;\/color[^>]*>/g, "</span>");
 	text = text.replaceAll("\n", "<br>");
 	return text;
