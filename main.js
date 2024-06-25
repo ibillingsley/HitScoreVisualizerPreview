@@ -46,35 +46,42 @@ const defaultConfig = `{
 }
 `;
 
+// Layout
 const preview = document.getElementById("preview");
 const previewAll = document.getElementById("previewAll");
 const previewToolbar = document.getElementById("previewToolbar");
 const previewColumn = document.getElementById("previewColumn");
 const editorColumn = document.getElementById("editorColumn");
+// Editor
 const textInput = document.getElementById("textInput");
 const fileInput = document.getElementById("fileInput");
 const fileName = document.getElementById("filenameInput");
 const loadInput = document.getElementById("loadInput");
+const formatButton = document.getElementById("format");
+const downloadButton = document.getElementById("download");
 const errorContainer = document.getElementById("error");
 const errorMessage = document.getElementById("errorMessage");
 const lintButton = document.getElementById("lint");
-const formatButton = document.getElementById("format");
-const downloadButton = document.getElementById("download");
+// Checkboxes
 const bloomInput = document.getElementById("bloomInput");
-const help = document.getElementById("help");
+const italicsInput = document.getElementById("italicsInput");
 const helpInput = document.getElementById("helpInput");
 const backgroundInput = document.getElementById("backgroundInput");
 const previewInput = document.getElementById("previewInput");
 const chainInput = document.getElementById("chainInput");
+// Format tokens
+const help = document.getElementById("help");
 const sInput = document.getElementById("sInput");
 const pInput = document.getElementById("pInput");
 const bInput = document.getElementById("bInput");
 const cInput = document.getElementById("cInput");
 const aInput = document.getElementById("aInput");
 const tInput = document.getElementById("tInput");
+// Preview sliders
 const bRangeInput = document.getElementById("bRangeInput");
 const cRangeInput = document.getElementById("cRangeInput");
 const aRangeInput = document.getElementById("aRangeInput");
+// Color picker
 const colorInput = document.getElementById("colorInput");
 const colorRegex =
 	/"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*(?:,\s*[\d.]+\s*)?\]|(color=)?(#[\dA-F]{6})/gi;
@@ -139,6 +146,7 @@ function renderScore(displayMode, judgment, tokens) {
 		.slice(0, 3)
 		.map((c) => c * 255)
 		.join(",")})`;
+	if (italicsInput.checked) score.style.fontStyle = "italic";
 	if (bloomInput.checked) {
 		const bloom = score.cloneNode(true);
 		bloom.className = "bloom";
@@ -238,8 +246,8 @@ document.body.className = layout[0];
 previewColumn.style.width = layout[1];
 editorColumn.style.width = layout[2];
 
-const toggles = load("toggles", [false, true, true, true]);
-const checkboxes = [bloomInput, backgroundInput, previewInput, helpInput];
+const toggles = load("toggles", [false, true, true, true, true]);
+const checkboxes = [bloomInput, backgroundInput, previewInput, helpInput, italicsInput];
 checkboxes.forEach((t, i) => (t.checked = toggles[i]));
 
 window.onbeforeunload = () => {
@@ -338,6 +346,7 @@ previewInput.oninput();
 
 chainInput.oninput = parseAndRender;
 bloomInput.oninput = parseAndRender;
+italicsInput.oninput = parseAndRender;
 
 backgroundInput.oninput = () => {
 	previewAll.style.background = backgroundInput.checked ? "" : "none";
