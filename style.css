@@ -99,6 +99,7 @@ body {
 .score {
 	position: relative;
 	margin: 0.75em;
+	white-space: pre;
 }
 
 .bloom {

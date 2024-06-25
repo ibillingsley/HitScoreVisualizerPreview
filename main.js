@@ -154,7 +154,9 @@ function rich(text) {
 	text = text.replaceAll(/&lt;\/size[^>]*>/g, "</span>");
 	text = text.replaceAll(/&lt;(?:color=)?(#[\dA-F]{6})[^>]*>/gi, '<span style="color: $1">');
 	text = text.replaceAll(/&lt;\/color[^>]*>/g, "</span>");
-	text = text.replaceAll("\n", "<br>");
+	text = text.replaceAll(/&lt;alpha=#([^>]+)>/g, (m, a) => `<span style="opacity: ${parseInt(a, 16) / 255}">`);
+	text = text.replaceAll(/&lt;\/alpha[^>]*>/g, "</span>");
+	text = text.replaceAll(/&lt;(\/?[uib])>/g, "<$1>");
 	return text;
 }
 
