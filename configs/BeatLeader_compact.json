@@ -108,5 +108,113 @@
       "color": [1.0, 0.0, 0.22, 1.0],
       "fade": false
     }
-  ]
+  ],
+  "chainHeadJudgments": [
+    {
+      "threshold": 85,
+      "text": "<size=140%>15</size>",
+      "color": [1.0, 1.0, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 84,
+      "text": "<size=130%>14</size>",
+      "color": [0.52, 0.0, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 83,
+      "text": "<size=130%>13</size>",
+      "color": [0.52, 0.0, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 82,
+      "text": "<size=125%>12</size>",
+      "color": [0.0, 0.64, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 81,
+      "text": "<size=125%>11</size>",
+      "color": [0.0, 0.64, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 80,
+      "text": "<size=125%>10</size>",
+      "color": [0.0, 0.64, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 79,
+      "text": "<size=125%>9</size>",
+      "color": [0.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 78,
+      "text": "<size=125%>8</size>",
+      "color": [0.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 77,
+      "text": "<size=125%>7</size>",
+      "color": [0.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 76,
+      "text": "<size=125%>6</size>",
+      "color": [0.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 75,
+      "text": "<size=125%>5</size>",
+      "color": [1.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 74,
+      "text": "<size=125%>4</size>",
+      "color": [1.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 73,
+      "text": "<size=125%>3</size>",
+      "color": [1.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 72,
+      "text": "<size=125%>2</size>",
+      "color": [1.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 71,
+      "text": "<size=125%>1</size>",
+      "color": [1.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 70,
+      "text": "<size=125%>0</size>",
+      "color": [1.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 0,
+      "text": "<size=110%>%s</size>",
+      "color": [1.0, 0.0, 0.22, 1.0],
+      "fade": false
+    }
+  ],
+  "chainLinkDisplay": {
+    "text": "%s",
+    "color": [1.0, 1.0, 1.0, 1.0]
+  }
 }
