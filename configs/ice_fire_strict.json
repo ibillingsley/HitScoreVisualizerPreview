@@ -232,7 +232,7 @@
     },
     {
       "threshold": 0,
-      "text": "‹ "
+      "text": "🢐 "
     }
   ],
   "afterCutAngleJudgments": [
@@ -242,11 +242,11 @@
     },
     {
       "threshold": 0,
-      "text": " ›"
+      "text": " 🢒"
     }
   ],
   "chainLinkDisplay": {
-    "text": "•",
-    "color": [0.0, 0.4, 1.0, 0.5]
+    "text": "⚬",
+    "color": [1.0, 1.0, 1.0, 0.5]
   }
 }
