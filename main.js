@@ -164,7 +164,7 @@ function rich(text) {
 	text = text.replaceAll(/&lt;\/color[^>]*>/g, "</span>");
 	text = text.replaceAll(/&lt;alpha=#([^>]+)>/g, (m, a) => `<span style="opacity: ${parseInt(a, 16) / 255}">`);
 	text = text.replaceAll(/&lt;\/alpha[^>]*>/g, "</span>");
-	text = text.replaceAll(/&lt;(\/?[uib])>/g, "<$1>");
+	text = text.replaceAll(/&lt;(\/?[uibs])>/g, "<$1>");
 	return text;
 }
 
@@ -193,6 +193,7 @@ function getTokens(json, chain) {
 		C: json.accuracyJudgments?.find((j) => (j.threshold || 0) <= c)?.text || "",
 		A: json.afterCutAngleJudgments?.find((j) => (j.threshold || 0) <= a)?.text || "",
 		T: json.timeDependencyJudgments?.find((j) => (j.threshold || 0) <= t)?.text || "",
+		d: "↗",
 		n: "\n",
 		"%": "%",
 	};
