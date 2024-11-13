@@ -164,6 +164,8 @@ function rich(text) {
 	text = text.replaceAll(/&lt;\/color[^>]*>/g, "</span>");
 	text = text.replaceAll(/&lt;alpha=#([^>]+)>/g, (m, a) => `<span style="opacity: ${parseInt(a, 16) / 255}">`);
 	text = text.replaceAll(/&lt;\/alpha[^>]*>/g, "</span>");
+	text = text.replaceAll(/&lt;line-height=([^>]+)>/g, `<span style="display: inline-block; line-height: $1">`);
+	text = text.replaceAll(/&lt;\/line-height[^>]*>/g, "</span>");
 	text = text.replaceAll(/&lt;(\/?[uibs])>/g, "<$1>");
 	return text;
 }
