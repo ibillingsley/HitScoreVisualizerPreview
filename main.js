@@ -106,7 +106,7 @@ function render(json, chain) {
 	// Render all threshold scores
 	for (const judgment of judgments) {
 		tokens.s = judgment.threshold || 0;
-		tokens.p = Math.floor(tokens.s / (chain ? 0.85 : 1.15));
+		tokens.p = Math.floor(tokens.s / 1.15);
 		previewAll.appendChild(renderScore(displayMode, judgment, tokens));
 	}
 	if (chain && json.chainLinkDisplay) {
@@ -180,10 +180,10 @@ function replaceTokens(text, tokens) {
 function getTokens(json, chain) {
 	const b = Number(bInput.value);
 	const c = Number(cInput.value);
-	const a = chain ? 0 : Number(aInput.value);
+	const a = Number(aInput.value);
 	const t = Number(tInput.value);
 	const s = b + c + a;
-	const p = Math.floor(s / (chain ? 0.85 : 1.15));
+	const p = Math.floor(s / 1.15);
 	return {
 		s: s,
 		p: p,
@@ -284,7 +284,6 @@ function parseAndRender() {
 	if (json && json.judgments) {
 		const chain = json.chainHeadJudgments && chainInput.checked;
 		chainInput.parentElement.classList.toggle("hidden", !json.chainHeadJudgments);
-		aInput.disabled = aRangeInput.disabled = chain;
 
 		render(json, chain);
 		textInput.classList.remove("error");

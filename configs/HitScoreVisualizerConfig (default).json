@@ -1,10 +1,11 @@
 {
   "majorVersion": 3,
-  "minorVersion": 3,
-  "patchVersion": 3,
+  "minorVersion": 5,
+  "patchVersion": 0,
   "isDefaultConfig": false,
   "displayMode": "format",
   "doIntermediateUpdates": true,
+  "assumeMaxPostSwing": false,
   "timeDependencyDecimalPrecision": 1,
   "timeDependencyDecimalOffset": 2,
   "judgments": [
@@ -77,7 +78,7 @@
   ],
   "chainHeadJudgments": [
     {
-      "threshold": 85,
+      "threshold": 115,
       "text": "%BFantastic%n%s",
       "color": [
         1.0,
@@ -88,7 +89,7 @@
       "fade": false
     },
     {
-      "threshold": 71,
+      "threshold": 101,
       "text": "<size=80%>%BExcellent</size>%n%s",
       "color": [
         0.0,
@@ -99,7 +100,7 @@
       "fade": false
     },
     {
-      "threshold": 60,
+      "threshold": 90,
       "text": "<size=80%>%BGreat</size>%n%s",
       "color": [
         1.0,
@@ -110,7 +111,7 @@
       "fade": false
     },
     {
-      "threshold": 50,
+      "threshold": 80,
       "text": "<size=80%>%BGood</size>%n%s",
       "color": [
         1.0,
@@ -121,7 +122,7 @@
       "fade": true
     },
     {
-      "threshold": 30,
+      "threshold": 60,
       "text": "<size=80%>%BDecent</size>%n%s",
       "color": [
         1.0,
