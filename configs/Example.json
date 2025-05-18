@@ -1,0 +1,53 @@
+{
+  "majorVersion": 3,
+  "minorVersion": 6,
+  "patchVersion": 0,
+  "displayMode": "format",
+  "fixedPosition": null,
+  "targetPositionOffset": null,
+  "timeDependencyDecimalPrecision": 1,
+  "timeDependencyDecimalOffset": 2,
+  "doIntermediateUpdates": true,
+  "assumeMaxPostSwing": false,
+  "judgments": [
+    { "threshold": 115, "text": "<size=250%><b>•", "color": [1, 1, 1, 1] },
+    { "threshold": 108, "text": "<size=120%>%B%c%A", "color": [1, 1, 1, 1] },
+    { "threshold": 0, "text": "<size=120%><alpha=#88>%B%c%A", "color": [1, 1, 1, 1] }
+  ],
+  "chainHeadJudgments": [
+    { "threshold": 85, "text": "<size=250%><b>•", "color": [1, 1, 1, 1] },
+    { "threshold": 78, "text": "<size=120%>%B%c", "color": [1, 1, 1, 1] },
+    { "threshold": 0, "text": "<size=120%><alpha=#88>%B%c", "color": [1, 1, 1, 1] }
+  ],
+  "chainLinkDisplay": {
+    "text": "<alpha=#66>•",
+    "color": [1, 1, 1, 1]
+  },
+  "beforeCutAngleJudgments": [
+    { "threshold": 70, "text": " " },
+    { "threshold": 63, "text": "-" },
+    { "threshold": 56, "text": "<color=#FFCC44>-</color>" },
+    { "threshold": 0, "text": "<color=#FF0000>-</color>" }
+  ],
+  "accuracyJudgments": [],
+  "afterCutAngleJudgments": [
+    { "threshold": 30, "text": " " },
+    { "threshold": 27, "text": "-" },
+    { "threshold": 24, "text": "<color=#FFCC44>-</color>" },
+    { "threshold": 0, "text": "<color=#FF0000>-</color>" }
+  ],
+  "timeDependencyJudgments": [],
+  "randomizeBadCutDisplays": false,
+  "badCutDisplays": [
+    { "text": "Bad Cut", "type": "WrongDirection", "color": [1, 1, 1, 1] },
+    { "text": "Bad Cut", "type": "WrongColor", "color": [1, 1, 1, 1] },
+    { "text": "Bomb", "type": "Bomb", "color": [1, 1, 1, 1] }
+  ],
+  "randomizeMissDisplays": true,
+  "missDisplays": [
+    { "text": "MISS", "color": [1, 1, 1, 1] },
+    { "text": "MOSS", "color": [1, 1, 1, 1] },
+    { "text": "MASS", "color": [1, 1, 1, 1] },
+    { "text": "MESS", "color": [1, 1, 1, 1] }
+  ]
+}

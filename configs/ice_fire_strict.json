@@ -2,7 +2,6 @@
   "majorVersion": 3,
   "minorVersion": 3,
   "patchVersion": 3,
-  "isDefaultConfig": false,
   "displayMode": "format",
   "doIntermediateUpdates": true,
   "judgments": [
