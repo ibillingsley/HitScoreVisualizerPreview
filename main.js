@@ -1,3 +1,5 @@
+"use strict";
+
 // Layout
 const preview = document.getElementById("preview");
 const previewAll = document.getElementById("previewAll");
