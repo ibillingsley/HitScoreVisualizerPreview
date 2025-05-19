@@ -394,7 +394,7 @@ fileInput.onchange = () => {
 
 // Drag and drop
 document.body.addEventListener("dragover", (e) => {
-	if (e.target !== fileInput && e.target !== textInput) {
+	if (e.target !== fileInput && e.dataTransfer.types.includes("Files")) {
 		e.preventDefault();
 	}
 });
