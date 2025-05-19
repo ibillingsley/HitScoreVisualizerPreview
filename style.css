@@ -17,9 +17,10 @@ body {
 	color-scheme: dark;
 	font-family: sans-serif;
 	background: var(--bg-color);
+	color: var(--text-color);
 	--bg-color: black;
 	--text-color: white;
-	--border-color: #777;
+	--border-color: #555;
 }
 
 #previewColumn,
@@ -48,35 +49,48 @@ body {
 	resize: horizontal;
 }
 
+#previewTabs {
+	justify-content: center;
+	padding: 1px 0 0;
+}
+
+.tabs input {
+	display: none;
+}
+
+.tabs span {
+	display: block;
+	position: relative;
+	margin-bottom: -1px;
+	padding: 3px 2ch;
+	border: 1px solid transparent;
+	border-radius: 3px 3px 0 0;
+}
+
+.tabs input:checked + span {
+	background: #333;
+	border-color: var(--border-color);
+	border-bottom-color: #333;
+}
+
+.tabs input:not(:checked) + span:hover {
+	background: #fff2;
+}
+
+.tabs input.empty:not(:checked) + span {
+	opacity: 0.5;
+}
+
 #previewAll {
 	background: black url(images/glass-desert-env.jpg) center;
 	background-size: cover;
-	border-bottom: 1px solid var(--border-color);
+	border: solid var(--border-color);
+	border-width: 1px 0;
 }
 
 #preview {
-	flex: 0 0.8 9.5em;
+	flex: 0 0.8 9.7em;
 	overflow: visible;
-}
-
-#previewToolbar {
-	flex-direction: row;
-	padding-bottom: 0.5em;
-}
-
-#bRangeInput {
-	flex-grow: 70;
-	width: 70px;
-}
-
-#cRangeInput {
-	flex-grow: 15;
-	width: 15px;
-}
-
-#aRangeInput {
-	flex-grow: 30;
-	width: 30px;
 }
 
 .scores {
@@ -85,7 +99,6 @@ body {
 	flex-wrap: wrap;
 	justify-content: center;
 	align-content: center;
-	align-items: center;
 	flex: 1 1 auto;
 	color: white;
 	font-family: "Teko", sans-serif;
@@ -103,11 +116,25 @@ body {
 
 .bloom {
 	position: absolute;
-	top: 0;
-	left: 0;
+	inset: 0;
 	margin: 0;
 	mix-blend-mode: screen;
 	filter: drop-shadow(0 0 1px #fffe) blur(7px);
+}
+
+#bRangeInput {
+	flex-grow: 70;
+	width: 70px;
+}
+
+#cRangeInput {
+	flex-grow: 15;
+	width: 15px;
+}
+
+#aRangeInput {
+	flex-grow: 30;
+	width: 30px;
 }
 
 #editorColumn {
@@ -121,6 +148,18 @@ body {
 .toolbar {
 	display: flex;
 	flex-wrap: wrap;
+	font-size: 80%;
+	padding: 0.25em 0.5em;
+	align-items: center;
+}
+
+#editorColumn .toolbar {
+	padding: 0;
+}
+
+#previewColumn .toolbar > * {
+	margin: 0 0.5em;
+	color: #ccc;
 }
 
 #loadInput {
@@ -153,7 +192,7 @@ body {
 
 #textInput.error {
 	border-color: red;
-	outline: solid thin red;
+	outline: thin solid red;
 }
 
 #error {
@@ -221,7 +260,7 @@ textarea,
 table,
 td,
 th {
-	border: solid 1px #666;
+	border: 1px solid var(--border-color);
 	border-spacing: 0;
 	border-collapse: collapse;
 }
@@ -252,17 +291,6 @@ th {
 
 #colorInput:not(.active) {
 	display: none;
-}
-
-.footer {
-	font-size: 80%;
-	padding: 0.25em 0.5em;
-	align-items: center;
-}
-
-.footer > * {
-	margin: 0 0.5em;
-	color: #ccc;
 }
 
 .layout2 .footer {

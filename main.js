@@ -1,51 +1,3 @@
-const defaultConfig = `{
-  "majorVersion": 3,
-  "minorVersion": 3,
-  "patchVersion": 3,
-  "isDefaultConfig": false,
-  "displayMode": "format",
-  "doIntermediateUpdates": true,
-  "judgments": [
-    {
-      "threshold": 115,
-      "text": "<size=110%>%s</size>",
-      "color": [1.0, 1.0, 1.0, 1.0],
-      "fade": false
-    },
-    {
-      "threshold": 113,
-      "text": "<size=110%>%s</size>",
-      "color": [0.52, 0.0, 1.0, 1.0],
-      "fade": false
-    },
-    {
-      "threshold": 110,
-      "text": "<size=110%>%s</size>",
-      "color": [0.0, 0.64, 1.0, 1.0],
-      "fade": false
-    },
-    {
-      "threshold": 106,
-      "text": "<size=110%>%s</size>",
-      "color": [0.0, 1.0, 0.0, 1.0],
-      "fade": false
-    },
-    {
-      "threshold": 100,
-      "text": "<size=110%>%s</size>",
-      "color": [1.0, 1.0, 0.0, 1.0],
-      "fade": false
-    },
-    {
-      "threshold": 0,
-      "text": "<size=110%>%s</size>",
-      "color": [1.0, 0.0, 0.22, 1.0],
-      "fade": false
-    }
-  ]
-}
-`;
-
 // Layout
 const preview = document.getElementById("preview");
 const previewAll = document.getElementById("previewAll");
@@ -62,13 +14,17 @@ const downloadButton = document.getElementById("download");
 const errorContainer = document.getElementById("error");
 const errorMessage = document.getElementById("errorMessage");
 const lintButton = document.getElementById("lint");
+// Tabs
+const previewTabs = document.getElementById("previewTabs");
+const noteTab = document.getElementById("noteTab");
+const chainTab = document.getElementById("chainTab");
+const badcutTab = document.getElementById("badcutTab");
+const missTab = document.getElementById("missTab");
 // Checkboxes
 const bloomInput = document.getElementById("bloomInput");
 const italicsInput = document.getElementById("italicsInput");
 const helpInput = document.getElementById("helpInput");
 const backgroundInput = document.getElementById("backgroundInput");
-const previewInput = document.getElementById("previewInput");
-const chainInput = document.getElementById("chainInput");
 // Format tokens
 const help = document.getElementById("help");
 const sInput = document.getElementById("sInput");
@@ -87,12 +43,34 @@ const colorRegex =
 	/"color"\s*:\s*\[\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*(?:,\s*[\d.]+\s*)?\]|(color=)?(#[\dA-F]{6})/gi;
 let modified = false;
 
-function render(json, chain) {
-	const displayMode = json.displayMode || (json.majorVersion ? "default" : "format");
-	const judgments = chain ? json.chainHeadJudgments : json.judgments;
-	const tokens = getTokens(json, chain);
+function render(json) {
 	preview.innerHTML = "";
 	previewAll.innerHTML = "";
+	noteTab.classList.toggle("empty", !json.judgments);
+	chainTab.classList.toggle("empty", !json.chainHeadJudgments && !json.chainLinkDisplay);
+	badcutTab.classList.toggle("empty", !json.badCutDisplays);
+	missTab.classList.toggle("empty", !json.missDisplays);
+	switch (getSelectedTab()) {
+		case "noteTab":
+			renderJudgments(json, false);
+			break;
+		case "chainTab":
+			renderJudgments(json, true);
+			break;
+		case "badcutTab":
+			renderBadcuts(json);
+			break;
+		case "missTab":
+			renderMisses(json);
+			break;
+	}
+	if (!previewAll.hasChildNodes()) previewAll.innerHTML = document.getElementById("empty").innerHTML;
+}
+
+function renderJudgments(json, chain) {
+	const displayMode = json.displayMode || (json.majorVersion ? "default" : "format");
+	const judgments = (chain ? json.chainHeadJudgments : json.judgments) || [];
+	const tokens = getTokens(json, chain);
 	// Render single score
 	let index = judgments.findIndex((j) => (j.threshold || 0) <= tokens.s);
 	if (index < 0) index = judgments.length - 1;
@@ -116,27 +94,39 @@ function render(json, chain) {
 	}
 }
 
+function renderBadcuts(json) {
+	for (const judgment of json.badCutDisplays || []) {
+		previewAll.appendChild(renderScore("textOnly", judgment, {}));
+	}
+}
+
+function renderMisses(json) {
+	for (const judgment of json.missDisplays || []) {
+		previewAll.appendChild(renderScore("textOnly", judgment, {}));
+	}
+}
+
 function renderScore(displayMode, judgment, tokens) {
 	const text = judgment.text || "";
 	const score = document.createElement("p");
 	score.className = "score";
 	switch (displayMode) {
 		case "format":
-			score.innerHTML = rich(replaceTokens(text, tokens));
+			score.innerHTML = richText(replaceTokens(text, tokens));
 			break;
 		case "numeric":
 			score.textContent = tokens.s;
 			break;
 		case "textOnly":
-			score.innerHTML = rich(text);
+			score.innerHTML = richText(text);
 			break;
 		case "scoreOnTop":
 			score.appendChild(document.createElement("span")).textContent = tokens.s;
 			score.appendChild(document.createElement("br"));
-			score.appendChild(document.createElement("span")).innerHTML = rich(text);
+			score.appendChild(document.createElement("span")).innerHTML = richText(text);
 			break;
 		default:
-			score.appendChild(document.createElement("span")).innerHTML = rich(text);
+			score.appendChild(document.createElement("span")).innerHTML = richText(text);
 			score.appendChild(document.createElement("br"));
 			score.appendChild(document.createElement("span")).textContent = tokens.s;
 			break;
@@ -156,7 +146,8 @@ function renderScore(displayMode, judgment, tokens) {
 	return score;
 }
 
-function rich(text) {
+/** http://digitalnativestudios.com/textmeshpro/docs/rich-text/ */
+function richText(text) {
 	text = text.replaceAll("<", "&lt;");
 	text = text.replaceAll(/&lt;size=([^>]+)>/g, '<span style="font-size: $1">');
 	text = text.replaceAll(/&lt;\/size[^>]*>/g, "</span>");
@@ -201,7 +192,7 @@ function getTokens(json, chain) {
 	};
 }
 
-function save(key, value) {
+function saveSetting(key, value) {
 	try {
 		localStorage.setItem(key, JSON.stringify(value));
 	} catch (e) {
@@ -209,7 +200,7 @@ function save(key, value) {
 	}
 }
 
-function load(key, defaultValue) {
+function loadSetting(key, defaultValue) {
 	try {
 		return JSON.parse(localStorage.getItem(key) || "") || defaultValue;
 	} catch (e) {
@@ -240,27 +231,38 @@ async function fetchConfig(url) {
 const params = new URLSearchParams(location.search);
 if (params.get("url")) fetchConfig(params.get("url"));
 
-// Persist UI state
-if (!textInput.value) textInput.value = load("text", defaultConfig);
-if (!fileName.value) fileName.value = load("filename", "default.json");
+// Tabs
+const tabId = loadSetting("tab", noteTab.id);
+(document.getElementById(tabId) || noteTab).checked = true;
 
-const layout = load("layout", ["", "", ""]);
+function getSelectedTab() {
+	return previewTabs.querySelector("input:checked").id;
+}
+
+for (const tab of previewTabs.getElementsByTagName("input")) tab.oninput = parseAndRender;
+
+// Persist UI state
+if (!textInput.value) textInput.value = loadSetting("text", "") || fetchConfig("configs/Default.json") || "";
+if (!fileName.value) fileName.value = loadSetting("filename", "Default.json");
+
+const layout = loadSetting("layout", ["", "", ""]);
 document.body.className = layout[0];
 previewColumn.style.width = layout[1];
 editorColumn.style.width = layout[2];
 
-const toggles = load("toggles", [false, true, true, true, true]);
-const checkboxes = [bloomInput, backgroundInput, previewInput, helpInput, italicsInput];
+const toggles = loadSetting("toggles", [false, true, true, true]);
+const checkboxes = [bloomInput, backgroundInput, helpInput, italicsInput];
 checkboxes.forEach((t, i) => (t.checked = toggles[i]));
 
 window.onbeforeunload = () => {
-	save("text", textInput.value);
-	save("filename", fileName.value);
-	save(
+	saveSetting("text", textInput.value);
+	saveSetting("filename", fileName.value);
+	saveSetting("tab", getSelectedTab());
+	saveSetting(
 		"toggles",
 		checkboxes.map((t) => t.checked)
 	);
-	save("layout", [document.body.className, previewColumn.style.width || "", editorColumn.style.width || ""]);
+	saveSetting("layout", [document.body.className, previewColumn.style.width || "", editorColumn.style.width || ""]);
 };
 
 // Text input
@@ -281,11 +283,8 @@ function parseAndRender() {
 			json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, "$1"));
 		} catch (e) {}
 	}
-	if (json && json.judgments) {
-		const chain = json.chainHeadJudgments && chainInput.checked;
-		chainInput.parentElement.classList.toggle("hidden", !json.chainHeadJudgments);
-
-		render(json, chain);
+	if (json) {
+		render(json);
 		textInput.classList.remove("error");
 	}
 	return json;
@@ -340,13 +339,6 @@ cRangeInput.oninput = onRangeInput;
 aRangeInput.oninput = onRangeInput;
 
 // Checkbox inputs
-previewInput.oninput = () => {
-	preview.classList.toggle("hidden", !previewInput.checked);
-	previewToolbar.classList.toggle("hidden", !previewInput.checked);
-};
-previewInput.oninput();
-
-chainInput.oninput = parseAndRender;
 bloomInput.oninput = parseAndRender;
 italicsInput.oninput = parseAndRender;
 

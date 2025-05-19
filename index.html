@@ -9,9 +9,15 @@
 </head>
 <body>
 	<div id="previewColumn">
+		<div id="previewTabs" class="toolbar tabs">
+			<label><input id="noteTab" type="radio" name="previewTab"><span>Notes</span></label>
+			<label><input id="chainTab" type="radio" name="previewTab"><span>Chains</span></label>
+			<label><input id="badcutTab" type="radio" name="previewTab"><span>Bad Cuts</span></label>
+			<label><input id="missTab" type="radio" name="previewTab"><span>Miss</span></label>
+		</div>
 		<div id="previewAll" class="scores"></div>
 		<div id="preview" class="scores"></div>
-		<div id="previewToolbar" class="toolbar footer">
+		<div id="previewToolbar" class="toolbar">
 			<label for="bRangeInput">Before</label><input id="bRangeInput" type="range" min="0" max="70" value="70">
 			<label for="cRangeInput">Accuracy</label><input id="cRangeInput" type="range" min="0" max="15" value="15">
 			<label for="aRangeInput">After</label><input id="aRangeInput" type="range" min="0" max="30" value="30">
@@ -20,11 +26,9 @@
 			<a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank">Source</a>
 			<a href="https://github.com/ErisApps/HitScoreVisualizer#how-to-config-aka-config-explained" target="_blank">Docs</a>
 			<div class="spacer"></div>
-			<label><input id="chainInput" type="checkbox"> Chains</label>
 			<label><input id="bloomInput" type="checkbox"> Bloom</label>
 			<label><input id="italicsInput" type="checkbox" checked> Italics</label>
 			<label><input id="backgroundInput" type="checkbox" checked> Background</label>
-			<label><input id="previewInput" type="checkbox" checked> Preview</label>
 			<label><input id="helpInput" type="checkbox" checked> Tokens</label>
 		</div>
 	</div>
@@ -132,6 +136,9 @@
 		</table>
 	</div>
 	<input id="colorInput" type="color">
+	<template id="empty">
+		<pre>not defined, see <a href="https://github.com/ErisApps/HitScoreVisualizer/blob/master/HitScoreVisualizer/Config-Documentation.md#example-config" target="_blank">example config</a></pre>
+	</template>
 	<script src="main.js"></script>
 </body>
 </html>
