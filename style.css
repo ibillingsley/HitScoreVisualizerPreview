@@ -82,6 +82,7 @@ body {
 }
 
 #previewAll {
+	min-height: 14.5rem;
 	background: black url(images/glass-desert-env.jpg) center;
 	background-size: cover;
 	border: solid var(--border-color);
@@ -89,7 +90,7 @@ body {
 }
 
 #preview {
-	flex: 0 0.8 9.7em;
+	flex: 0 0 14.5rem;
 	overflow: visible;
 }
 
@@ -182,7 +183,7 @@ body {
 	flex-grow: 1;
 	width: 100%;
 	min-width: 16em;
-	min-height: 10em;
+	min-height: 14.5rem;
 	background: inherit;
 	color: inherit;
 	font-family: monospace;
@@ -227,6 +228,7 @@ label {
 
 #help {
 	width: 100%;
+	min-height: 21.9em;
 	font-size: 80%;
 }
 
