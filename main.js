@@ -230,9 +230,6 @@ async function fetchConfig(url) {
 		alert(e.message + " " + url);
 	}
 }
-const params = new URLSearchParams(location.search);
-if (params.get("url")) fetchConfig(params.get("url"));
-
 // Tabs
 const tabId = loadSetting("tab", noteTab.id);
 (document.getElementById(tabId) || noteTab).checked = true;
@@ -244,8 +241,12 @@ function getSelectedTab() {
 for (const tab of previewTabs.getElementsByTagName("input")) tab.oninput = parseAndRender;
 
 // Persist UI state
-if (!textInput.value) textInput.value = loadSetting("text", "") || fetchConfig("configs/Default.json") || "";
+if (!textInput.value) textInput.value = loadSetting("text", "");
 if (!fileName.value) fileName.value = loadSetting("filename", "Default.json");
+
+const params = new URLSearchParams(location.search);
+if (params.get("url")) fetchConfig(params.get("url"));
+else if (!textInput.value) fetchConfig("configs/Default.json");
 
 const layout = loadSetting("layout", ["", "", ""]);
 document.body.className = layout[0];
