@@ -70,7 +70,7 @@ function render(json) {
 }
 
 function renderJudgments(json, chain) {
-	const displayMode = json.displayMode || (json.majorVersion ? "default" : "format");
+	const displayMode = json.displayMode?.toLowerCase() || (json.majorVersion ? "default" : "format");
 	const judgments = (chain ? json.chainHeadJudgments : json.judgments) || [];
 	const tokens = getTokens(json, chain);
 	// Render single score
@@ -98,13 +98,13 @@ function renderJudgments(json, chain) {
 
 function renderBadcuts(json) {
 	for (const judgment of json.badCutDisplays || []) {
-		previewAll.appendChild(renderScore("textOnly", judgment, {}));
+		previewAll.appendChild(renderScore("textonly", judgment, {}));
 	}
 }
 
 function renderMisses(json) {
 	for (const judgment of json.missDisplays || []) {
-		previewAll.appendChild(renderScore("textOnly", judgment, {}));
+		previewAll.appendChild(renderScore("textonly", judgment, {}));
 	}
 }
 
@@ -119,10 +119,10 @@ function renderScore(displayMode, judgment, tokens) {
 		case "numeric":
 			score.textContent = tokens.s;
 			break;
-		case "textOnly":
+		case "textonly":
 			score.innerHTML = richText(text);
 			break;
-		case "scoreOnTop":
+		case "scoreontop":
 			score.appendChild(document.createElement("span")).textContent = tokens.s;
 			score.appendChild(document.createElement("br"));
 			score.appendChild(document.createElement("span")).innerHTML = richText(text);
