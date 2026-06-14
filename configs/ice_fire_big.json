@@ -8,31 +8,31 @@
     {
       "threshold": 115,
       "text": "<size=150%>15</size>",
-      "color": [0.0, 0.4, 1.0, 1.0],
+      "color": [0.0, 0.55, 1.0, 1.0],
       "fade": false
     },
     {
       "threshold": 114,
       "text": "<size=145%>%B14%A</size>",
-      "color": [0.0, 0.5, 1.0, 0.95],
+      "color": [0.0, 0.6, 1.0, 0.95],
       "fade": false
     },
     {
       "threshold": 113,
       "text": "<size=140%>%B13%A</size>",
-      "color": [0.2, 0.6, 1.0, 0.9],
+      "color": [0.2, 0.65, 1.0, 0.9],
       "fade": false
     },
     {
       "threshold": 112,
       "text": "<size=140%>%B12%A</size>",
-      "color": [0.4, 0.7, 1.0, 0.85],
+      "color": [0.4, 0.75, 1.0, 0.85],
       "fade": false
     },
     {
       "threshold": 111,
       "text": "<size=140%>%B11%A</size>",
-      "color": [0.6, 0.8, 1.0, 0.8],
+      "color": [0.6, 0.85, 1.0, 0.8],
       "fade": false
     },
     {
