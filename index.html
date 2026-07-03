@@ -36,6 +36,12 @@
 		<div class="toolbar">
 			<select id="loadInput">
 				<option value="">Load</option>
+				<optgroup label="Local File">
+					<option value="file">Browse&hellip;</option>
+				</optgroup>
+				<optgroup label="Remote">
+					<option value="url">URL&hellip;</option>
+				</optgroup>
 				<optgroup label="Presets">
 					<option value="Default.json">Default.json</option>
 					<option value="Default (old).json">Default (old).json</option>
@@ -46,12 +52,6 @@
 					<option value="ice_fire.json">ice_fire.json</option>
 					<option value="ice_fire_compact.json">ice_fire_compact.json</option>
 					<option value="ice_fire_big.json">ice_fire_big.json</option>
-				</optgroup>
-				<optgroup label="Remote">
-					<option value="url">URL&hellip;</option>
-				</optgroup>
-				<optgroup label="Local File">
-					<option value="file">Browse&hellip;</option>
 				</optgroup>
 			</select>
 			<input id="fileInput" type="file" accept=".json">
