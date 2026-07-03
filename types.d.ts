@@ -6,6 +6,3 @@ interface Document {
 interface Node {
 	cloneNode<T>(this: T, deep?: boolean): T;
 }
-interface HTMLInputElement {
-	oninput(): void;
-}

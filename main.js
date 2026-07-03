@@ -235,7 +235,7 @@ const tabId = loadSetting("tab", noteTab.id);
 (document.getElementById(tabId) || noteTab).checked = true;
 
 function getSelectedTab() {
-	return previewTabs.querySelector("input:checked").id;
+	return previewTabs.querySelector("input:checked")?.id;
 }
 
 for (const tab of previewTabs.getElementsByTagName("input")) tab.oninput = parseAndRender;
@@ -284,7 +284,7 @@ function parseAndRender() {
 		try {
 			// Remove trailing commas
 			json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, "$1"));
-		} catch (e) {}
+		} catch (e) { }
 	}
 	if (json) {
 		render(json);
@@ -345,15 +345,13 @@ aRangeInput.oninput = onRangeInput;
 bloomInput.oninput = parseAndRender;
 italicsInput.oninput = parseAndRender;
 
-backgroundInput.oninput = () => {
+(backgroundInput.oninput = () => {
 	previewAll.style.background = backgroundInput.checked ? "" : "none";
-};
-backgroundInput.oninput();
+})();
 
-helpInput.oninput = () => {
+(helpInput.oninput = () => {
 	help.classList.toggle("hidden", !helpInput.checked);
-};
-helpInput.oninput();
+})();
 
 // Presets
 loadInput.onchange = async () => {
@@ -383,19 +381,19 @@ async function setFile(file) {
 }
 
 fileInput.onchange = () => {
-	const file = fileInput.files[0];
+	const file = fileInput.files?.[0];
 	if (file) setFile(file);
 };
 
 // Drag and drop
 document.body.addEventListener("dragover", (e) => {
-	if (e.target !== fileInput && e.dataTransfer.types.includes("Files")) {
+	if (e.target !== fileInput && e.dataTransfer?.types.includes("Files")) {
 		e.preventDefault();
 	}
 });
 
 document.body.addEventListener("drop", (e) => {
-	const file = e.dataTransfer.files[0];
+	const file = e.dataTransfer?.files[0];
 	if (file && (file.type === "application/json" || file.type === "text/plain") && e.target !== fileInput) {
 		e.preventDefault();
 		setFile(file);
@@ -435,7 +433,7 @@ downloadButton.onclick = function () {
 textInput.addEventListener("click", (e) => {
 	const cursor = textInput.selectionDirection === "forward" ? textInput.selectionEnd : textInput.selectionStart;
 	const matches = textInput.value.matchAll(colorRegex);
-	const match = Array.from(matches).find((m) => cursor > m.index && cursor < m.index + m[0].length);
+	const match = Array.from(matches).find((m) => cursor !== null && cursor > m.index && cursor < m.index + m[0].length);
 	if (!match) return hideColorPicker();
 	// Cursor in color block, show picker
 	const [text, r, g, b, prefix, hex] = match;
