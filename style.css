@@ -234,8 +234,7 @@ label {
 
 #help td:first-child {
 	padding: 0 1em;
-	font-family: monospace;
-	font-size: 125%;
+	font-family: monospace, monospace;
 	white-space: nowrap;
 }
 
