@@ -167,9 +167,10 @@ body {
 	width: 4em;
 }
 
-#loadInput option[value=""],
 #fileInput {
-	display: none;
+	opacity: 0;
+	width: 0;
+	height: 0;
 }
 
 #filenameInput {
