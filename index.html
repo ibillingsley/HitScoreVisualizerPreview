@@ -34,27 +34,26 @@
 	</div>
 	<div id="editorColumn">
 		<div class="toolbar">
-			<select id="loadInput">
-				<option value="" class="hidden">Load</option>
-				<optgroup label="Local File">
-					<option value="file">Browse&hellip;</option>
-				</optgroup>
-				<optgroup label="Remote">
-					<option value="url">URL&hellip;</option>
-				</optgroup>
-				<optgroup label="Presets">
-					<option value="Default.json">Default.json</option>
-					<option value="Default (old).json">Default (old).json</option>
-					<option value="Example.json">Example.json</option>
-					<option value="BeatLeader.json">BeatLeader.json</option>
-					<option value="BeatLeader_compact.json">BeatLeader_compact.json</option>
-					<option value="acc_compact.json">acc_compact.json</option>
-					<option value="ice_fire.json">ice_fire.json</option>
-					<option value="ice_fire_compact.json">ice_fire_compact.json</option>
-					<option value="ice_fire_big.json">ice_fire_big.json</option>
-				</optgroup>
-			</select>
-			<input id="fileInput" type="file" accept=".json">
+			<details id="loadMenu">
+				<summary><button id="loadButton" type="button">Load <small>⏷</small></button></summary>
+				<div>
+					<label>File <input id="fileInput" type="file" accept=".json,.txt"></label>
+					<label>URL <input id="urlInput" type="url" placeholder="https://..."></label>
+					<label for="presetInput">Presets</label>
+					<select id="presetInput" size="9">
+						<option value="" class="hidden">Select preset</option>
+						<option value="Default.json">Default.json</option>
+						<option value="Default (old).json">Default (old).json</option>
+						<option value="Example.json">Example.json</option>
+						<option value="BeatLeader.json">BeatLeader.json</option>
+						<option value="BeatLeader_compact.json">BeatLeader_compact.json</option>
+						<option value="acc_compact.json">acc_compact.json</option>
+						<option value="ice_fire.json">ice_fire.json</option>
+						<option value="ice_fire_compact.json">ice_fire_compact.json</option>
+						<option value="ice_fire_big.json">ice_fire_big.json</option>
+					</select>
+				</div>
+			</details>
 			<input id="filenameInput" type="text">
 			<button id="format">Format</button>
 			<button id="download">Download</button>

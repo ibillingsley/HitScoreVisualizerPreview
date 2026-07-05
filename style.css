@@ -163,15 +163,33 @@ body {
 	color: #ccc;
 }
 
-#loadInput {
-	width: 4.5em;
+#loadMenu summary {
+	display: inline-block;
 }
 
-#fileInput {
-	opacity: 0;
-	width: 0;
-	height: 0;
-	overflow: hidden;
+#loadMenu > div {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+	width: 18em;
+	padding: 0.5em;
+	background: #111;
+	border: 1px solid var(--border-color);
+}
+
+#loadMenu label {
+	display: flex;
+	align-items: baseline;
+	gap: 0.5em;
+	margin: 0;
+}
+
+#loadMenu input {
+	flex: 1 1 auto;
+	width: 10em;
+	min-width: 0;
+	margin-bottom: 0.5em;
 }
 
 #filenameInput {
@@ -221,6 +239,10 @@ input[type="number"] {
 
 input[type="range"] {
 	min-width: 4em;
+}
+
+select {
+	overflow: auto;
 }
 
 label {

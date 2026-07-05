@@ -8,9 +8,12 @@ const previewColumn = document.getElementById("previewColumn");
 const editorColumn = document.getElementById("editorColumn");
 // Editor
 const textInput = document.getElementById("textInput");
+const loadMenu = document.getElementById("loadMenu");
+const loadButton = document.getElementById("loadButton");
 const fileInput = document.getElementById("fileInput");
+const urlInput = document.getElementById("urlInput");
+const presetInput = document.getElementById("presetInput");
 const fileName = document.getElementById("filenameInput");
-const loadInput = document.getElementById("loadInput");
 const formatButton = document.getElementById("format");
 const downloadButton = document.getElementById("download");
 const errorContainer = document.getElementById("error");
@@ -353,22 +356,27 @@ italicsInput.oninput = parseAndRender;
 	help.classList.toggle("hidden", !helpInput.checked);
 })();
 
+// Load menu
+loadButton.onclick = () => loadMenu.open = !loadMenu.open;
+
 // Presets
-loadInput.onchange = async () => {
-	const preset = loadInput.value;
-	loadInput.value = "";
-	if (preset === "file") {
-		fileInput.click();
-	} else if (preset === "url") {
-		const url = prompt("Enter URL to .json file");
-		if (url && (await fetchConfig(url))) {
-			history.pushState({}, "", "?url=" + url.replaceAll("&", "%26"));
-		}
-	} else if (preset) {
+presetInput.onchange = () => {
+	const preset = presetInput.value;
+	if (preset) {
 		if (modified && !confirm(`Unsaved changes \n\nLoad ${preset}?`)) return;
 		fetchConfig("configs/" + preset);
 	}
 };
+
+// URL input
+urlInput.onchange = async () => {
+	const url = urlInput.value;
+	if (urlInput.checkValidity() && url && (await fetchConfig(url)))
+		history.pushState({}, "", "?url=" + url.replaceAll("&", "%26"));
+	else if (location.search.startsWith("?url="))
+		history.pushState({}, "", "?");
+};
+urlInput.onpaste = () => setTimeout(() => urlInput.dispatchEvent(new Event("change")));
 
 // File input
 async function setFile(file) {
@@ -489,9 +497,12 @@ textInput.addEventListener("input", () => {
 });
 
 document.body.addEventListener("click", (e) => {
-	if (e.target !== textInput && e.target !== colorInput) {
-		hideColorPicker();
-	}
+	if (e.target !== textInput && e.target !== colorInput) hideColorPicker();
+	if (!loadMenu.contains(/** @type {Node} */(e.target))) loadMenu.open = false;
+});
+
+document.body.addEventListener("keyup", (e) => {
+	if (e.key === "Escape") loadMenu.open = false;
 });
 
 // Layout swap
