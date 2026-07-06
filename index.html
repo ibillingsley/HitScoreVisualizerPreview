@@ -35,13 +35,12 @@
 	<div id="editorColumn">
 		<div class="toolbar">
 			<details id="loadMenu">
-				<summary><button id="loadButton" type="button">Load <small>⏷</small></button></summary>
+				<summary><button id="loadButton" type="button">Load ▾</button></summary>
 				<div>
 					<label>File <input id="fileInput" type="file" accept=".json,.txt"></label>
 					<label>URL <input id="urlInput" type="url" placeholder="https://..."></label>
 					<label for="presetInput">Presets</label>
 					<select id="presetInput" size="9">
-						<option value="" class="hidden">Select preset</option>
 						<option value="Default.json">Default.json</option>
 						<option value="Default (old).json">Default (old).json</option>
 						<option value="Example.json">Example.json</option>
@@ -51,6 +50,7 @@
 						<option value="ice_fire.json">ice_fire.json</option>
 						<option value="ice_fire_compact.json">ice_fire_compact.json</option>
 						<option value="ice_fire_big.json">ice_fire_big.json</option>
+						<option value="" hidden disabled></option>
 					</select>
 				</div>
 			</details>
