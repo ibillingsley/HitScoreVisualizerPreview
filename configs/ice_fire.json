@@ -39,12 +39,12 @@
   "chainHeadJudgments": [
     {
       "threshold": 85,
-      "color": [0.0, 0.4, 1.0, 1.0],
+      "color": [0.0, 0.55, 1.0, 1.0],
       "fade": false
     },
     {
       "threshold": 82,
-      "color": [0.0, 0.65, 1.0, 0.9],
+      "color": [0.0, 0.75, 1.0, 0.9],
       "fade": true
     },
     {
