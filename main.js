@@ -298,7 +298,8 @@ parseAndRender();
 
 // Error location
 errorMessage.onclick = () => {
-	const match = errorMessage.textContent.match(/position (\d+)|line (\d+) column (\d+)|\.\.\."([\s\S]+)"\.\.\./);
+	const message = errorMessage.textContent;
+	const match = message.match(/.*?position (\d+)|.*?line (\d+) column (\d+)|\.\.\."([\s\S]+?)"\.\.\./);
 	if (!match) return;
 	let [position, line, column] = match.slice(1, 4).map((m) => Number(m));
 	let snippet = match[4];
@@ -309,7 +310,7 @@ errorMessage.onclick = () => {
 			.reduce((t, v) => v.length + 1 + t, column - 1);
 	} else if (snippet) {
 		position = textInput.value.indexOf(snippet);
-		let token = errorMessage.textContent.match(/'(.)'/)?.[1];
+		let token = message.match(/'(.)'/)?.[1];
 		if (token && snippet.includes(token)) position = textInput.value.indexOf(token, position);
 	}
 	if (position >= 0) {
