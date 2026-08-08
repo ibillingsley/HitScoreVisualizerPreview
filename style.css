@@ -1,8 +1,8 @@
 @font-face {
-	font-family: "Teko";
 	font-style: normal;
 	font-weight: 500;
 	src: url("fonts/teko-500.woff2") format("woff2");
+	font-family: "Teko";
 }
 
 * {
@@ -10,14 +10,14 @@
 }
 
 body {
-	margin: 0;
-	height: 100dvh;
 	display: flex;
+	height: 100dvh;
+	margin: 0;
 	overflow: hidden;
-	color-scheme: dark;
-	font-family: sans-serif;
 	background: var(--bg-color);
 	color: var(--text-color);
+	color-scheme: dark;
+	font-family: sans-serif;
 	--bg-color: black;
 	--text-color: white;
 	--border-color: #555;
@@ -37,15 +37,15 @@ body {
 }
 
 .layout2 #previewColumn {
+	flex: 1 1 100px;
 	order: 1;
 	width: auto;
-	flex: 1 1 100px;
 	resize: none;
 }
 
 .layout2 #editorColumn {
-	width: 40vw;
 	flex: 0 0 auto;
+	width: 40vw;
 	resize: horizontal;
 }
 
@@ -68,9 +68,9 @@ body {
 }
 
 .tabs input:checked + span {
-	background: #333;
 	border-color: var(--border-color);
 	border-bottom-color: #333;
+	background: #333;
 }
 
 .tabs input:not(:checked) + span:hover {
@@ -83,10 +83,10 @@ body {
 
 #previewAll {
 	min-height: 14.5rem;
-	background: black url(images/glass-desert-env.jpg) center;
-	background-size: cover;
 	border: solid var(--border-color);
 	border-width: 1px 0;
+	background: black url(images/glass-desert-env.jpg) center;
+	background-size: cover;
 }
 
 #preview {
@@ -96,17 +96,17 @@ body {
 
 .scores {
 	display: flex;
+	flex: 1 1 auto;
 	flex-direction: column;
 	flex-wrap: wrap;
-	justify-content: center;
 	align-content: center;
-	flex: 1 1 auto;
+	justify-content: center;
+	overflow: auto;
 	color: white;
-	font-family: "Teko", sans-serif;
 	font-weight: 500;
 	font-size: 150%;
+	font-family: "Teko", sans-serif;
 	text-align: center;
-	overflow: auto;
 }
 
 .score {
@@ -117,8 +117,8 @@ body {
 
 .bloom {
 	position: absolute;
-	inset: 0;
 	margin: 0;
+	inset: 0;
 	mix-blend-mode: screen;
 	filter: drop-shadow(0 0 1px #fffe) blur(7px);
 }
@@ -139,8 +139,8 @@ body {
 }
 
 #editorColumn {
-	flex: 1 1 100px;
 	display: flex;
+	flex: 1 1 100px;
 	flex-direction: column;
 	background: var(--bg-color);
 	color: var(--text-color);
@@ -149,9 +149,9 @@ body {
 .toolbar {
 	display: flex;
 	flex-wrap: wrap;
-	font-size: 80%;
-	padding: 0.25em 0.5em;
 	align-items: center;
+	padding: 0.25em 0.5em;
+	font-size: 80%;
 }
 
 #editorColumn .toolbar {
@@ -168,21 +168,21 @@ body {
 }
 
 #loadMenu > div {
-	position: absolute;
 	display: flex;
+	position: absolute;
 	flex-direction: column;
-	gap: 0.5em;
 	width: 18em;
 	padding: 0.5em;
-	background: #111;
+	gap: 0.5em;
 	border: 1px solid var(--border-color);
+	background: #111;
 }
 
 #loadMenu label {
 	display: flex;
 	align-items: baseline;
-	gap: 0.5em;
 	margin: 0;
+	gap: 0.5em;
 }
 
 #loadMenu input {
@@ -204,10 +204,10 @@ body {
 	width: 100%;
 	min-width: 16em;
 	min-height: 14.5rem;
+	outline: none;
 	background: inherit;
 	color: inherit;
 	font-family: monospace;
-	outline: none;
 	resize: none;
 }
 
@@ -277,8 +277,8 @@ table,
 td,
 th {
 	border: 1px solid var(--border-color);
-	border-spacing: 0;
 	border-collapse: collapse;
+	border-spacing: 0;
 }
 
 #colorInput {

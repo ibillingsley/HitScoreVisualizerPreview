@@ -1,0 +1,39 @@
+{
+	"lineWidth": 120,
+	"newLineKind": "lf",
+	"useTabs": true,
+	"typescript": {
+		"quoteStyle": "preferDouble",
+		"useBraces": "maintain",
+		"bracePosition": "sameLine",
+		"preferHanging": true
+	},
+	"json": {
+		"overrides": {
+			"files": ["configs/*.json"],
+			"newLineKind": "crlf",
+			"useTabs": false,
+			"indentWidth": 2
+		}
+	},
+	"markdown": {},
+	"malva": {
+		"declarationOrder": "smacss"
+	},
+	"markup": {
+		"closingBracketSameLine": true,
+		"doctypeKeywordCase": "ignore"
+	},
+	"excludes": [
+		"**/node_modules",
+		"**/*-lock.json",
+		"**/*.svg"
+	],
+	"plugins": [
+		"https://plugins.dprint.dev/typescript-0.96.1.wasm",
+		"https://plugins.dprint.dev/json-0.23.0.wasm",
+		"https://plugins.dprint.dev/markdown-0.22.1.wasm",
+		"https://plugins.dprint.dev/g-plane/malva-v0.16.0.wasm",
+		"https://plugins.dprint.dev/g-plane/markup_fmt-v0.27.3.wasm"
+	]
+}

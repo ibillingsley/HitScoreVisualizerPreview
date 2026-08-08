@@ -136,10 +136,11 @@ function renderScore(displayMode, judgment, tokens) {
 			break;
 	}
 	const color = judgment.color || [0, 0, 0, 0];
-	score.style.color = `rgb(${color
-		.slice(0, 3)
-		.map((c) => c * 255)
-		.join(",")})`;
+	score.style.color = `rgb(${
+		color.slice(0, 3)
+			.map((c) => c * 255)
+			.join(",")
+	})`;
 	if (italicsInput.checked) score.style.fontStyle = "italic";
 	if (bloomInput.checked) {
 		const bloom = score.cloneNode(true);
@@ -263,10 +264,7 @@ window.onbeforeunload = () => {
 	saveSetting("text", textInput.value);
 	saveSetting("filename", fileName.value);
 	saveSetting("tab", getSelectedTab());
-	saveSetting(
-		"toggles",
-		checkboxes.map((t) => t.checked)
-	);
+	saveSetting("toggles", checkboxes.map((t) => t.checked));
 	saveSetting("layout", [document.body.className, previewColumn.style.width || "", editorColumn.style.width || ""]);
 };
 
@@ -286,7 +284,7 @@ function parseAndRender() {
 		try {
 			// Remove trailing commas
 			json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, "$1"));
-		} catch (e) { }
+		} catch (e) {}
 	}
 	if (json) {
 		render(json);
@@ -413,12 +411,11 @@ document.body.addEventListener("drop", (e) => {
 });
 
 // Format
-formatButton.onclick = function () {
+formatButton.onclick = function() {
 	const json = parseAndRender();
 	if (json) {
 		const text = JSON.stringify(json, null, 2).replace(colorRegex, (match) =>
-			match.replace(/\n\s*/g, "").replaceAll(",", ", ")
-		);
+			match.replace(/\n\s*/g, "").replaceAll(",", ", "));
 		textInput.focus();
 		textInput.select();
 		// Preserves undo history
@@ -428,7 +425,7 @@ formatButton.onclick = function () {
 };
 
 // Download
-downloadButton.onclick = function () {
+downloadButton.onclick = function() {
 	const a = document.createElement("a");
 	const blob = new Blob([textInput.value], { type: "text/plain" });
 	const url = URL.createObjectURL(blob);
@@ -502,7 +499,7 @@ textInput.addEventListener("input", () => {
 
 document.body.addEventListener("click", (e) => {
 	if (e.target !== textInput && e.target !== colorInput) hideColorPicker();
-	if (!loadMenu.contains(/** @type {Node} */(e.target))) loadMenu.open = false;
+	if (!loadMenu.contains(/** @type {Node} */ (e.target))) loadMenu.open = false;
 });
 
 document.body.addEventListener("keyup", (e) => {
@@ -511,10 +508,8 @@ document.body.addEventListener("keyup", (e) => {
 
 // Layout swap
 document.addEventListener("mouseup", () => {
-	if (
-		(previewColumn.style.width || editorColumn.style.width) &&
-		Math.min(previewColumn.clientWidth, editorColumn.clientWidth) <= 100
-	) {
+	if ((previewColumn.style.width || editorColumn.style.width)
+		&& Math.min(previewColumn.clientWidth, editorColumn.clientWidth) <= 100) {
 		previewColumn.style.width = "";
 		editorColumn.style.width = "";
 		document.body.classList.toggle("layout2");
