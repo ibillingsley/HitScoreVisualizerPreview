@@ -23,7 +23,7 @@
 			<label for="aRangeInput">After</label><input id="aRangeInput" type="range" min="0" max="30" value="30">
 		</div>
 		<div class="toolbar footer">
-			<a href="https://github.com/ibillingsley/HitScoreVisualizerPreview" target="_blank">Source</a>
+			<a href="https://github.com/iza-ttv/HitScoreVisualizerPreview" target="_blank">Source</a>
 			<a href="https://github.com/ErisApps/HitScoreVisualizer#how-to-config-aka-config-explained" target="_blank">Docs</a>
 			<div class="spacer"></div>
 			<label><input id="bloomInput" type="checkbox"> Bloom</label>
@@ -58,15 +58,8 @@
 			<button id="format">Format</button>
 			<button id="download">Download</button>
 		</div>
-		<form action="https://jsonformatter.curiousconcept.com/" method="post" target="_blank">
-			<textarea id="textInput" name="data" spellcheck="false"></textarea>
-			<div id="error" class="hidden">
-				<button type="submit" title="Validate">Error</button>
-				<span id="errorMessage" title="Go to error"></span>
-				<input type="hidden" name="template" value="twospace">
-				<input type="hidden" name="process" value="true">
-			</div>
-		</form>
+		<textarea id="textInput" spellcheck="false"></textarea>
+		<div id="errorMessage" class="hidden" title="Go to error"></div>
 		<table id="help">
 			<tr>
 				<th colspan="3">Format Tokens</th>

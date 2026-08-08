@@ -216,13 +216,10 @@ body {
 	outline: thin solid red;
 }
 
-#error {
+#errorMessage {
 	padding: 0.25em;
 	background-color: darkred;
 	font-family: monospace;
-}
-
-#errorMessage {
 	cursor: pointer;
 }
 
@@ -273,12 +270,6 @@ label {
 
 #help code {
 	font-size: 125%;
-}
-
-form {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
 }
 
 textarea,

@@ -16,7 +16,6 @@ const presetInput = document.getElementById("presetInput");
 const fileName = document.getElementById("filenameInput");
 const formatButton = document.getElementById("format");
 const downloadButton = document.getElementById("download");
-const errorContainer = document.getElementById("error");
 const errorMessage = document.getElementById("errorMessage");
 const lintButton = document.getElementById("lint");
 // Tabs
@@ -151,7 +150,7 @@ function renderScore(displayMode, judgment, tokens) {
 	return score;
 }
 
-/** http://digitalnativestudios.com/textmeshpro/docs/rich-text/ */
+/** https://web.archive.org/web/20250622235924/https://digitalnativestudios.com/textmeshpro/docs/rich-text/ */
 function richText(text) {
 	text = text.replaceAll("<", "&lt;");
 	text = text.replaceAll(/&lt;size=([^>]+)>/g, '<span style="font-size: $1">');
@@ -274,7 +273,7 @@ window.onbeforeunload = () => {
 // Text input
 function parseAndRender() {
 	textInput.classList.add("error");
-	errorContainer.classList.add("hidden");
+	errorMessage.classList.add("hidden");
 	errorMessage.textContent = "";
 	let json = null;
 	try {
@@ -283,7 +282,7 @@ function parseAndRender() {
 		console.warn(e);
 		// Show parse error
 		errorMessage.textContent = e.message || "";
-		errorContainer.classList.remove("hidden");
+		errorMessage.classList.remove("hidden");
 		try {
 			// Remove trailing commas
 			json = JSON.parse(textInput.value.replaceAll(/,(\s*[\]\}])/g, "$1"));
@@ -301,16 +300,21 @@ parseAndRender();
 
 // Error location
 errorMessage.onclick = () => {
-	const match = errorMessage.textContent.match(/position (\d+)|line (\d+) column (\d+)/);
+	const match = errorMessage.textContent.match(/position (\d+)|line (\d+) column (\d+)|\.\.\."([\s\S]+)"\.\.\./);
 	if (!match) return;
-	let [position, line, column] = match.slice(1).map((m) => Number(m));
-	if (!position) {
+	let [position, line, column] = match.slice(1, 4).map((m) => Number(m));
+	let snippet = match[4];
+	if (isNaN(position) && line >= 0 && column >= 0) {
 		position = textInput.value
 			.split("\n")
 			.slice(0, line - 1)
 			.reduce((t, v) => v.length + 1 + t, column - 1);
+	} else if (snippet) {
+		position = textInput.value.indexOf(snippet);
+		let token = errorMessage.textContent.match(/'(.)'/)?.[1];
+		if (token && snippet.includes(token)) position = textInput.value.indexOf(token, position);
 	}
-	if (position) {
+	if (position >= 0) {
 		textInput.setSelectionRange(position, position);
 		textInput.focus();
 	}
