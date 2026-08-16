@@ -38,6 +38,31 @@
   ],
   "chainHeadJudgments": [
     {
+      "threshold": 115,
+      "color": [0.0, 0.55, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 112,
+      "color": [0.0, 0.75, 1.0, 0.9],
+      "fade": true
+    },
+    {
+      "threshold": 106,
+      "color": [1.0, 1.0, 1.0, 0.8],
+      "fade": true
+    },
+    {
+      "threshold": 100,
+      "color": [1.0, 1.0, 0.0, 0.7],
+      "fade": true
+    },
+    {
+      "threshold": 86,
+      "color": [1.0, 0.5, 0.0, 0.6],
+      "fade": true
+    },
+    {
       "threshold": 85,
       "color": [0.0, 0.55, 1.0, 1.0],
       "fade": false

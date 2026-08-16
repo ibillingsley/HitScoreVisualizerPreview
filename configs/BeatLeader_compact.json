@@ -110,9 +110,39 @@
   ],
   "chainHeadJudgments": [
     {
+      "threshold": 115,
+      "text": "<size=140%>15</size>",
+      "color": [1.0, 1.0, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 113,
+      "text": "<size=130%>%c</size>",
+      "color": [0.52, 0.0, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 110,
+      "text": "<size=125%>%c</size>",
+      "color": [0.0, 0.64, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 106,
+      "text": "<size=125%>%c</size>",
+      "color": [0.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 100,
+      "text": "<size=125%>%c</size>",
+      "color": [1.0, 1.0, 0.0, 1.0],
+      "fade": false
+    },
+    {
       "threshold": 86,
       "text": "<size=110%>%s</size>",
-      "color": [1.0, 1.0, 1.0, 1.0],
+      "color": [1.0, 0.0, 0.22, 1.0],
       "fade": false
     },
     {

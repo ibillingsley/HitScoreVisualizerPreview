@@ -116,10 +116,28 @@
   ],
   "chainHeadJudgments": [
     {
+      "threshold": 115,
+      "text": "<size=150%>15</size>",
+      "color": [0.0, 0.55, 1.0, 1.0],
+      "fade": false
+    },
+    {
+      "threshold": 109,
+      "text": "<size=140%>%B%c  </size>",
+      "color": [1.0, 1.0, 1.0, 0.7],
+      "fade": true
+    },
+    {
+      "threshold": 100,
+      "text": "<size=140%>%B%c  </size>",
+      "color": [1.0, 0.9, 0.0, 0.25],
+      "fade": true
+    },
+    {
       "threshold": 86,
       "text": "<size=115%>%B%s  </size>",
-      "color": [1.0, 1.0, 1.0, 0.7],
-      "fade": false
+      "color": [1.0, 0.4, 0.0, 0.2],
+      "fade": true
     },
     {
       "threshold": 85,
@@ -230,6 +248,10 @@
       "fade": true
     }
   ],
+  "chainLinkDisplay": {
+    "text": "⚬",
+    "color": [1.0, 1.0, 1.0, 0.5]
+  },
   "beforeCutAngleJudgments": [
     {
       "threshold": 70,
@@ -249,9 +271,5 @@
       "threshold": 0,
       "text": " 🢒"
     }
-  ],
-  "chainLinkDisplay": {
-    "text": "⚬",
-    "color": [1.0, 1.0, 1.0, 0.5]
-  }
+  ]
 }
